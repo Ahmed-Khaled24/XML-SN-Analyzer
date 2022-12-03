@@ -1,0 +1,19 @@
+{
+  "name": "xml-analyzer",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Ahmed-Khaled24/XML-Analyzer.git"
+  },
+  "author": "malek-basel-fahmy-khaled",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Ahmed-Khaled24/XML-Analyzer/issues"
+  },
+  "homepage": "https://github.com/Ahmed-Khaled24/XML-Analyzer#readme"
+}
