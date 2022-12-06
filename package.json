@@ -1,7 +1,6 @@
 {
   "name": "xml-analyzer",
   "version": "1.0.0",
-  "description": "",
   "main": "index.js",
   "scripts": {
     "start": "node index.js"
@@ -15,5 +14,10 @@
   "bugs": {
     "url": "https://github.com/Ahmed-Khaled24/XML-Analyzer/issues"
   },
-  "homepage": "https://github.com/Ahmed-Khaled24/XML-Analyzer#readme"
+  "homepage": "https://github.com/Ahmed-Khaled24/XML-Analyzer#readme",
+  "description": "",
+  "dependencies": {
+    "express": "^4.18.2",
+    "stack-lifo": "^0.1.6"
+  }
 }
