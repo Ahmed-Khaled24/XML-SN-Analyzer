@@ -14,7 +14,7 @@ async function main() {
     let samplePath ="D:/Kollya/Senior/Senior 1/term awl/Data Structure/project/XML-Analyzer/sample.xml";
     const file =  await readFile(samplePath);
  
-    converToJSON(file);
+    const fileJSON = converToJSON(file);
 
 }
 
@@ -85,9 +85,7 @@ function converToJSON (xmlFile){
     })
 
 
-
-
-
+    return JSON.stringify(root) 
 }
 
 
