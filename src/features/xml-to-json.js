@@ -75,13 +75,11 @@ function converToJSON (xmlFile){
 
         //Checking if content is empty in certain line (and whether that line has a closing statement or not to use recent node instead of current node)
         if(content.length != 0 && (closingRegex.test(line)===false)){
-            if(content[0] == ' ') content[0].trim()
-            console.log("HERE1",content);
-            tagNode.content += content
+            if(content[0] == ' ') content.trim()
+            tagNode.value += content
         }else if (content.length != 0 && (closingRegex.test(line)===true)){
-            if(content[0] == ' ') content[0].trim()
-            console.log("HERE2",content);
-            recentNode.content += content
+            if(content[0] == ' ') content.trim()
+            recentNode.value += content
         }
         
     })
