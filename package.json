@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js"
+    "watch": "nodemon --exec electron ./src/electron/main-process/main.js"
   },
   "repository": {
     "type": "git",
@@ -15,5 +15,8 @@
   "bugs": {
     "url": "https://github.com/Ahmed-Khaled24/XML-Analyzer/issues"
   },
-  "homepage": "https://github.com/Ahmed-Khaled24/XML-Analyzer#readme"
+  "homepage": "https://github.com/Ahmed-Khaled24/XML-Analyzer#readme",
+  "dependencies": {
+    "electron": "^22.0.0"
+  }
 }
