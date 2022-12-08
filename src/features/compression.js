@@ -1,39 +1,55 @@
 const fs = require('fs')
 
-module.exports = function compress(root){
+ function compressAndSave(root , filePath){
+    root = JSON.parse(root)
     let file = [["id","name","posts(body,topic)","followers(id)"]]
     for(let i=0 ; i<root.descendants.length ; i++){
         let subFile = []
-        for(let n=0 ; n<root.descendants[i].descendants.length ; n++){
-            let nnname = root.descendants[i].descendants[n].name;
-        if(root.descendants[i].descendants[n].name ==="id") {
+        let userFieldsLength = root.descendants[i].descendants.length
+        for(let n=0 ; n<userFieldsLength ; n++){
 
+        let userField =root.descendants[i].descendants[n].name
 
-            subFile.push(root.descendants[i].descendants[n].value)}
-        if(root.descendants[i].descendants[n].name ==="name") subFile.push(root.descendants[i].descendants[n].value)
-        if(root.descendants[i].descendants[n].name ==="posts") {
+        if(userField ==="id") {
+            subFile.push(userField.value)
+        }
+
+        if(userField ==="name"){
+            subFile.push(root.descendants[i].descendants[n].value)
+        } 
+
+        if(userField ==="posts") {
             let postArr =[]
-            for(let k=0 ; k< root.descendants[i].descendants[n].descendants.length ; k++){
+            let postsLength = root.descendants[i].descendants[n].descendants.length
+            for(let k=0 ; k< postsLength ; k++){
                 let postBodyArr=[]
-                for(let h=0 ; h <root.descendants[i].descendants[n].descendants[k].descendants.length ; h++){
-                if(root.descendants[i].descendants[n].descendants[k].descendants[h].name === "body")postBodyArr=(root.descendants[i].descendants[n].descendants[k].descendants[h].value)
-                if(root.descendants[i].descendants[n].descendants[k].descendants[h].name === "topics"){
+                let singlePostLength =root.descendants[i].descendants[n].descendants[k].descendants.length
+                for(let h=0 ; h < singlePostLength; h++){
+                let singlePostField =root.descendants[i].descendants[n].descendants[k].descendants[h]
+                if(singlePostField.name === "body"){
+                    postBodyArr.push(root.descendants[i].descendants[n].descendants[k].descendants[h].value)
+                }
+                if(singlePostField.name === "topics"){
                     let topncsPostSubArr = []
-                    for(let j=0 ; j < root.descendants[i].descendants[n].descendants[k].descendants[h].descendants.length ; j++){
-                        topncsPostSubArr.push(root.descendants[i].descendants[n].descendants[k].descendants[h].descendants[j].value)
+                    let topicsLength =  root.descendants[i].descendants[n].descendants[k].descendants[h].descendants.length
+                    for(let j=0 ; j < topicsLength ; j++){
+                        let topic = root.descendants[i].descendants[n].descendants[k].descendants[h].descendants[j].value
+                        topncsPostSubArr.push(topic)
                     }
                     let wholePostArr = [postBodyArr , topncsPostSubArr]
                     postArr.push(wholePostArr)
                 }
             }
         }
-
             subFile.push(postArr)
         }
-        if(root.descendants[i].descendants[n].name === "followers"){
+
+        if(userField === "followers"){
             let followersArr =[]
-            for(let k=0 ; k<root.descendants[i].descendants[n].descendants.length ; k++){
-               followersArr.push(root.descendants[i].descendants[n].descendants[k].descendants[0].value)
+            let followersLength =root.descendants[i].descendants[n].descendants.length
+            for(let k=0 ; k< followersLength; k++){
+                let followerID = root.descendants[i].descendants[n].descendants[k].descendants[0].value
+               followersArr.push(followerID)
             }
             subFile.push(followersArr)
         }
@@ -42,15 +58,11 @@ module.exports = function compress(root){
     file.push(subFile)
 
     }
-    //console.log(file[2][2]);
 
     content = JSON.stringify(file);
-    try {
-        fs.writeFileSync('./compressed.txt', content);
-        // file written successfully
-      } catch (err) {
-        console.error(err);
-      }
+    
+    SaveFile(content ,filePath , 'compressed' )
+    return file
 }
 
 function decompressAndSave(file , filePath){
@@ -104,25 +116,28 @@ function decompressAndSave(file , filePath){
         }
         lines.push(`\t\t</followers>`)
 
-        lines.push(`\t\t</user>`)
+        lines.push(`\t</user>`)
         
 
     }
     lines.push(`</users>`)
 
-    SaveToFile(lines, filePath)
+    SaveFile(lines, filePath , 'Decompressed')
     return lines
 }
 
-async function SaveToFile(lines , filePath){
+async function SaveFile(lines , filePath , control){
     let logger = fs.createWriteStream(filePath, {
         flags : 'a'
     })
-
+    if(control === 'Decompressed'){
     lines.forEach(line => {
         line = line + '\n'
         logger.write(line)
     });
+}else if(control === 'compressed'){
+    logger.write(lines)
+}
     logger.end()
 
     
@@ -141,6 +156,11 @@ let test = [
 
 
 //console.log(test);
- let lines = decompressAndSave(test ,'./Decompressed.xml')
-console.log(lines);
+ //let lines = decompressAndSave(test ,'./Decompressed.xml')
+//console.log(lines);
 //console.log(test[0][1]);
+
+module.exports = {
+    compressAndSave : compressAndSave,
+    decompressAndSave : decompressAndSave
+}
