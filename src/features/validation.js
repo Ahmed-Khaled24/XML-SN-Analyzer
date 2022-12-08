@@ -21,22 +21,18 @@ function getTagName({ tag }) {
 
 function getAllTags(lines) {
 	let allTags = lines.map((line) => getXMLTags(line));
-	allTags = allTags.map((line, lineIndex) => {
+	allTags = allTags.filter(line => line); 		// filter null lines
+	allTags = allTags.map((line, lineIndex) => {	// extract line number and tag type for each tag
 		return line.map((tag) => {
 			return {
 				tag,
 				lineNumber: lineIndex + 1,
+				type: checkTagType(tag),
+				matched: false
 			};
 		});
 	});
 	allTags = allTags.flat();
-	allTags = allTags.map((tagObj) => {
-		return {
-			...tagObj,
-			type: checkTagType(tagObj.tag),
-			matched: false,
-		};
-	});
 	return allTags;
 }
 
