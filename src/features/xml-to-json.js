@@ -1,8 +1,7 @@
 const Stack = require('stack-lifo');
 const treeNode = require('../utilities/treeNode.js');
-const  getNode  = require('../utilities/searchTree.js');
-const compress = require('./compression')
-
+const  getNode  = require('../utilities/Tree.js');
+const Tree = require('../utilities/Tree')
 
 
 
@@ -14,7 +13,7 @@ module.exports = function converToJSON (xmlFile){
     // First traversion flag
     let flag =-1
     // Tree root
-    let root
+    let tree = new Tree()
     
     let stack = new Stack();
     // Current tree node scope
@@ -29,7 +28,7 @@ module.exports = function converToJSON (xmlFile){
             let openTagName = line.match(openingRegex)[0].replace(/[><]/g,"").trim()
             if(flag === -1){
                 tagNode = new treeNode(openTagName)
-                root = tagNode
+                tree.root = tagNode
                 flag++
             }
             
@@ -49,7 +48,7 @@ module.exports = function converToJSON (xmlFile){
         if(closingRegex.test(line)){
 
             content =  content.replace(closingRegex, "").trim()
-                let temp = getNode(root , tagNode.parent)
+                let temp = Tree.getNode(tree.root , tagNode.parent)
                 recentNode = tagNode
                 tagNode = temp
 
@@ -74,7 +73,7 @@ module.exports = function converToJSON (xmlFile){
     })
 
 
-    return (JSON.stringify(root)) 
+    return (JSON.stringify(tree.root)) 
 }
 
 

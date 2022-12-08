@@ -65,6 +65,8 @@ const fs = require('fs')
     return file
 }
 
+
+
 function decompressAndSave(file , filePath){
     let lines= ['<users>']
     for(let i=1 ; i< file.length ; i++ ){
@@ -81,22 +83,18 @@ function decompressAndSave(file , filePath){
 
         lines.push('\t\t<posts>')
         let postsLength = file[i][2].length
-        //console.log(postsLength);
         for(let k=0 ; k< postsLength  ; k++){
             let postBody = file[i][2][k][0]
-           // console.log('POSTBODY => ',postBody);
             lines.push(`\t\t\t<post>`)
             lines.push(`\t\t\t\t<body>`)
             lines.push('\t\t\t\t\t'+postBody)
             lines.push(`\t\t\t\t</body>`)
 
             let topicsLength = file[i][2][k][1].length
-            //console.log(topicLength);
             lines.push(`\t\t\t\t<topics>`)
             for(let j=0 ; j<topicsLength ; j++){
                 lines.push(`\t\t\t\t\t<topic>`)
                 let topic = file[i][2][k][1][j]
-                //console.log(topic);
                 lines.push('\t\t\t\t\t\t'+topic)
                 lines.push(`\t\t\t\t\t</topic>`)
             }
@@ -144,21 +142,6 @@ async function SaveFile(lines , filePath , control){
 }
 
 
-
-
-let test = [
-    
-    ['1' , 'Ahmed Ali', [['postBody1', ['topic1','topic2']],['postBody2', ['topic1','topic2']]] ,['1','2']],
-
-    ['2' , 'Omar Ali', [['postBody1', ['topic1','topic2']],['postBody2', ['topic1','topic2']]] ,['1','2']]
-
-]
-
-
-//console.log(test);
- //let lines = decompressAndSave(test ,'./Decompressed.xml')
-//console.log(lines);
-//console.log(test[0][1]);
 
 module.exports = {
     compressAndSave : compressAndSave,
