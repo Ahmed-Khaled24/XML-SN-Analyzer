@@ -15,20 +15,26 @@ function checkTagType(tag) {
 	}
 }
 
-function getTagName({ tag }) {
+function getTagName(tag) {
+	if (typeof tag === Object) tag = tag.tag;
 	return tag.replace("<", "").replace(">", "").replace("/", "");
 }
 
 function getAllTags(lines) {
 	let allTags = lines.map((line) => getXMLTags(line));
-	allTags = allTags.filter(line => line); 		// filter null lines
-	allTags = allTags.map((line, lineIndex) => {	// extract line number and tag type for each tag
+	allTags = allTags.map((line, index) => {
+		return { line, lineNumber: index + 1 };
+	});
+	allTags = allTags.filter(({ line }) => line); // filter null lines
+	allTags = allTags.map(({ line, lineNumber }) => {
+		// extract line number and tag type for each tag
 		return line.map((tag) => {
 			return {
 				tag,
-				lineNumber: lineIndex + 1,
+				lineNumber,
 				type: checkTagType(tag),
-				matched: false
+				matched: false,
+				discovered: null,
 			};
 		});
 	});
@@ -36,26 +42,26 @@ function getAllTags(lines) {
 	return allTags;
 }
 
-function analyzeTags(allTags) {
-	for (let outer = 0; outer < allTags.length; outer++) {
-		const outerTag = allTags[outer];
-		for (let inner = outer + 1; inner < allTags.length; inner++) {
-			const innerTag = allTags[inner];
-			if (outerTag.type === "opening") {
-				if (innerTag.type === "opening") {
-					if (getTagName(outerTag) === getTagName(innerTag)) {
-						// outer don't has corresponding closing tag.
-						break;
-					}
-				} else if (innerTag.type === "closing") {
-					if (getTagName(outerTag) === getTagName(innerTag)) {
-						// if the closing hasn't matched before.
-						if (!innerTag.matched) {
-							outerTag.matched = true;
-							innerTag.matched = true;
-							break;
-						}
-					}
+function getIndexOfFirstOpening(allTags) {
+	for (let i = 0; i < allTags.length; i++) {
+		if (allTags[i].type === "opening") {
+			return i;
+		}
+	}
+	return null;
+}
+
+function analyzeTags(allTags, startIndex) {
+	allTags[startIndex].discovered = true;
+	for (let i = startIndex + 1; i < allTags.length; i++) {
+		let { tag, type, matched, discovered } = allTags[i];
+		if (type === "opening" && !matched && !discovered) {
+			analyzeTags(allTags, i);
+		} else if (type === "closing" && !matched) {
+			if (getTagName(tag) === getTagName(allTags[startIndex].tag)) {
+				if (!matched && !allTags[startIndex].matched) {
+					allTags[startIndex].matched = true;
+					allTags[i].matched = true;
 				}
 			}
 		}
@@ -63,33 +69,14 @@ function analyzeTags(allTags) {
 }
 
 function getAnalysisFeedback(allTags) {
-	let feedback = [];
-	const filteredTags = allTags.filter(({ tag, matched }) => tag && !matched);
-
-	for (let index = 0; index < filteredTags.length; index++) {
-		const { tag, type, lineNumber } = filteredTags[index];
-
-		if (index + 1 < filteredTags.length) {
-			const nextTag = filteredTags[index + 1];
-			if (type === "opening" && nextTag.type === "closing") {
-				feedback.push(
-					`Error: tag ${tag} in line number ${lineNumber} doesn't match tag ${nextTag.tag} ` +
-					`in ${ lineNumber === nextTag.lineNumber ? "the same line" : `line number ${nextTag.lineNumber}`}.`
-				);
-				index++;
-				continue;
-			}
-		}
-
+	let feedback = allTags.filter(({ matched }) => !matched);
+	feedback = feedback.map(({ tag, lineNumber, type }) => {
 		if (type === "opening") {
-			feedback.push(`Error: tag ${tag} in line number ${lineNumber} has no corresponding closing tag.`);
+			return `Tag ${tag} in line ${lineNumber} has no proper closing tag`;
+		} else if (type === "closing") {
+			return `Tag ${tag} in line ${lineNumber} has no proper opening tag`;
 		}
-
-		if (type === "closing") {
-			feedback.push(`Error: tag ${tag} in line number ${lineNumber} has no corresponding opening tag.`);
-		}
-
-	}
+	});
 	return feedback;
 }
 
@@ -97,7 +84,8 @@ function getAnalysisFeedback(allTags) {
 async function validateXML(absolutePath) {
 	const lines = await readFile(absolutePath);
 	const allTags = getAllTags(lines);
-	analyzeTags(allTags);
+	const indexOfFirstOpening = getIndexOfFirstOpening(allTags);
+	if (indexOfFirstOpening != null) analyzeTags(allTags, indexOfFirstOpening);
 	return getAnalysisFeedback(allTags);
 }
 
