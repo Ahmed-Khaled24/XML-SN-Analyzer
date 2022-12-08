@@ -1,4 +1,3 @@
-const readFile = require('../utilities/readFile.js');
 const Stack = require('stack-lifo');
 const treeNode = require('../utilities/treeNode.js');
 const  getNode  = require('../utilities/searchTree.js');
@@ -9,18 +8,7 @@ const compress = require('./compression')
 
 
 
-
-async function main() {
-    let testPath = "D:/Kollya/Senior/Senior 1/term awl/Data Structure/project/XML-Analyzer/src/features/test.xml";
-    let samplePath ="D:/Kollya/Senior/Senior 1/term awl/Data Structure/project/XML-Analyzer/sample.xml";
-    const file =  await readFile(samplePath);
- 
-    const fileJSON = converToJSON(file);
-
-}
-
-
-function converToJSON (xmlFile){
+module.exports = function converToJSON (xmlFile){
     let openingRegex = /<[a-zA-z0-9]+>/ ;
     let closingRegex = /<\/[a-zA-z0-9]+>/;
     // First traversion flag
@@ -37,7 +25,7 @@ function converToJSON (xmlFile){
         let recentNode = ""
 
         if(openingRegex.test(line)){
-            // console.log("OPENING => ",line);
+            
             let openTagName = line.match(openingRegex)[0].replace(/[><]/g,"").trim()
             if(flag === -1){
                 tagNode = new treeNode(openTagName)
@@ -50,7 +38,6 @@ function converToJSON (xmlFile){
                 temp2.parent = tagNode.id
                 tagNode.descendants.push(temp2)
                 tagNode=temp2
-                //console.log(root);
             }
             content = content.replace(openingRegex,"")
             stack.push(openTagName)
@@ -61,22 +48,17 @@ function converToJSON (xmlFile){
 
         if(closingRegex.test(line)){
 
-            // var closeTagName = line.match(closingRegex)[0].replace(/[<>\/]/g , "")
             content =  content.replace(closingRegex, "").trim()
-            // if(stack.peek().match(closeTagName) == closeTagName ){
                 let temp = getNode(root , tagNode.parent)
                 recentNode = tagNode
                 tagNode = temp
 
                stack.pop()
 
-            //}
 
         }
 
-        // if((closingRegex.test(line)===false) && (openingRegex.test(line)===false)){
-        //     content = content.trim()
-        // }
+
 
         //Checking if content is empty in certain line (and whether that line has a closing statement or not to use recent node instead of current node)
         if(content.length != 0 && (closingRegex.test(line)===false)){
@@ -91,13 +73,9 @@ function converToJSON (xmlFile){
         
     })
 
-    //console.log(root);
-    compress(root)
 
-
-    return JSON.stringify(root) 
+    return (JSON.stringify(root)) 
 }
 
 
-// Made like that because await can only be used inside async Functions
- main();
+
