@@ -1,4 +1,5 @@
 const readFile = require("../utilities/readFile");
+const stack = new (require("stack-lifo"))();
 
 function getXMLTags(fileLine) {
 	const regex = /<.*?>/g;
@@ -16,7 +17,7 @@ function checkTagType(tag) {
 }
 
 function getTagName(tag) {
-	if (typeof tag === Object) tag = tag.tag;
+	if (typeof tag === "object") tag = tag.tag;
 	return tag.replace("<", "").replace(">", "").replace("/", "");
 }
 
@@ -80,13 +81,46 @@ function getAnalysisFeedback(allTags) {
 	return feedback;
 }
 
+function correctXML(allTags, lines) {
+	for (let curTag of allTags) {
+		if (curTag.type === "opening") {
+			stack.push(curTag);
+		} else {
+			if (!stack.isEmpty()) {
+				const stackTop = stack.peek();
+				if (getTagName(stackTop) !== getTagName(curTag)) {
+					let lineIndex = curTag.lineNumber - 1;
+					lines[lineIndex] = lines[lineIndex].replace(
+						getTagName(curTag),
+						getTagName(stackTop)
+					);
+				}
+				stack.pop();
+			} else {
+				lines.unshift(curTag.tag.replace("/", ""));
+			}
+		}
+	}
+
+	while (!stack.isEmpty()) {
+		let stackTop = stack.peek();
+		stack.pop();
+		lines.push(`<${getTagName(stackTop.tag)}>`);
+	}
+
+}
+
 // returns feedback array contains all errors found;
 async function validateXML(absolutePath) {
 	const lines = await readFile(absolutePath);
 	const allTags = getAllTags(lines);
+	correctXML(allTags, lines);
 	const indexOfFirstOpening = getIndexOfFirstOpening(allTags);
 	if (indexOfFirstOpening != null) analyzeTags(allTags, indexOfFirstOpening);
-	return getAnalysisFeedback(allTags);
+	return {
+		feedback: getAnalysisFeedback(allTags),
+		correct: lines,
+	};
 }
 
 module.exports = validateXML;

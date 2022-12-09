@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js"
+    "start": "node ./src/index.js"
   },
   "repository": {
     "type": "git",
@@ -15,5 +15,8 @@
   "bugs": {
     "url": "https://github.com/Ahmed-Khaled24/XML-Analyzer/issues"
   },
-  "homepage": "https://github.com/Ahmed-Khaled24/XML-Analyzer#readme"
+  "homepage": "https://github.com/Ahmed-Khaled24/XML-Analyzer#readme",
+  "dependencies": {
+    "stack-lifo": "^0.1.6"
+  }
 }
