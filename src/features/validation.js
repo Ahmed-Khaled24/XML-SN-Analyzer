@@ -1,10 +1,5 @@
 const readFile = require("../utilities/readFile");
-const stack = new (require("stack-lifo"))();
-
-function getXMLTags(fileLine) {
-	const regex = /<.*?>/g;
-	return fileLine.match(regex);
-}
+const Stack = require("stack-lifo");
 
 function isTag(word) {
 	const regex = /<.*?>/;
@@ -70,6 +65,7 @@ function getAllWords(lines) {
 }
 
 function correctXML(allWords, lines) {
+	const stack = new Stack();
 	for (let word of allWords) {
 		if (!word.isTag) continue;
 			
