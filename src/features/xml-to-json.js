@@ -10,12 +10,10 @@ const Tree = require('../utilities/Tree')
 module.exports = function converToJSON (xmlFile){
     let openingRegex = /<[a-zA-z0-9]+>/ ;
     let closingRegex = /<\/[a-zA-z0-9]+>/;
-    // First traversion flag
+    // First opening tag flag
     let flag =-1
     // Tree root
     let tree = new Tree()
-    
-    let stack = new Stack();
     // Current tree node scope
     let tagNode;
 
@@ -31,30 +29,23 @@ module.exports = function converToJSON (xmlFile){
                 tree.root = tagNode
                 flag++
             }
-            
             else{
                 let temp2 =new treeNode(openTagName)
                 temp2.parent = tagNode.id
                 tagNode.descendants.push(temp2)
                 tagNode=temp2
             }
-            content = content.replace(openingRegex,"")
-            stack.push(openTagName)
+            content = content.replace(openingRegex,"").trim()
         }
 
 
 
 
         if(closingRegex.test(line)){
-
             content =  content.replace(closingRegex, "").trim()
                 let temp = Tree.getNode(tree.root , tagNode.parent)
                 recentNode = tagNode
                 tagNode = temp
-
-               stack.pop()
-
-
         }
 
 

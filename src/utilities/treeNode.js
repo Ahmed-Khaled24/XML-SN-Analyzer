@@ -1,12 +1,12 @@
+let counter=0
  module.exports = class treeNode{
-    constructor(name ){
+    constructor(name){
         this.name = name;
         this.value = ""
         this.descendants = []
         this.parent = null
-        // this.id =id
-        this.id = Math.floor(Math.random()*100000000)
-         //this.id = Date.now()
+        this.id = counter++
+
     }
     
 
