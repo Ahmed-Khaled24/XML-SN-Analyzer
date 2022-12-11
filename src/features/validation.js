@@ -97,7 +97,7 @@ function correctXML(allWords, lines) {
 	while (!stack.isEmpty()) {
 		let stackTop = stack.peek();
 		stack.pop();
-		lines.push(`<${getTagName(stackTop.word)}>`);
+		lines.push(`</${getTagName(stackTop.word)}>`);
 	}
 }
 
