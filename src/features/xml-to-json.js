@@ -8,7 +8,7 @@ const Tree = require('../utilities/Tree')
 
 
 module.exports = function converToJSON (xmlFile){
-    let openingRegex = /<[a-zA-z0-9]+>/ ;
+    let openingRegex = /<[a-zA-z0-9"=\s-]+>/ ;
     let closingRegex = /<\/[a-zA-z0-9]+>/;
     // First opening tag flag
     let flag =-1
@@ -22,8 +22,11 @@ module.exports = function converToJSON (xmlFile){
         let recentNode = ""
 
         if(openingRegex.test(line)){
-            
-            let openTagName = line.match(openingRegex)[0].replace(/[><]/g,"").trim()
+            let test = line.match(openingRegex)[0].split(" ")
+
+            //console.log(test);
+            let openTagName = test[0].replace(/[><]/g,"").trim()
+            console.log(openTagName);
             if(flag === -1){
                 tagNode = new treeNode(openTagName)
                 tree.root = tagNode
@@ -34,6 +37,14 @@ module.exports = function converToJSON (xmlFile){
                 temp2.parent = tagNode.id
                 tagNode.descendants.push(temp2)
                 tagNode=temp2
+            }
+            for(let i=1 ; i<test.length ; i++){
+                let pair = test[i].split("=")
+                let key = pair[0]
+                let value = pair[1].replace(/[\">]/g,"")
+                console.log(`pair =>${value}`);
+                tagNode['attributes'][key] = value
+
             }
             content = content.replace(openingRegex,"").trim()
         }
@@ -63,7 +74,8 @@ module.exports = function converToJSON (xmlFile){
         
     })
 
-
+    //return(memArr);
+    //console.log(tree.root);
     return (JSON.stringify(tree.root)) 
 }
 

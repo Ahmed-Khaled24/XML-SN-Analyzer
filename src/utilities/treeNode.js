@@ -3,7 +3,8 @@ let counter=0
     constructor(name){
         this.name = name;
         this.value = ""
-        this.descendants = []
+        this.attributes = {}
+        this.descendants = {}
         this.parent = null
         this.id = counter++
 
