@@ -1,0 +1,134 @@
+const readFile = require("../utilities/readFile");
+const Stack = require("stack-lifo");
+
+function isTag(word) {
+	const regex = /<.*?>/;
+	return regex.test(word);
+}
+
+function checkTagType(tag) {
+	const openingTagRegex = /<[^/].*?>/g;
+	const closingTagRegex = /<\/.*?>/g;
+	if (openingTagRegex.test(tag)) {
+		return "opening";
+	} else if (closingTagRegex.test(tag)) {
+		return "closing";
+	}
+}
+
+function getTagName(word) {
+	if (typeof word === "object") word = word.word;
+	return word.replace("<", "").replace(">", "").replace("/", "");
+}
+
+function getAllWords(lines) {
+	let allWords = lines.map((line) => line.split(" "));
+	allWords = allWords.map((line) => line.filter((word) => word !== ""));
+	allWords = allWords.map((line, index) => {
+		return { line, lineNumber: index + 1 };
+	});
+
+	allWords = allWords.map(({ line, lineNumber }) => {
+		return line.map((word) => {
+			return {
+				word,
+				lineNumber,
+				isTag: isTag(word),
+				type: isTag(word) ? checkTagType(word) : "string",
+			};
+		});
+	});
+	allWords = allWords.flat();
+	allWords = allWords.map((word, index) => {
+		if (!word.isTag) return word;
+		let line_number_for_last_string_child = -1;
+		for (let i = index + 1; i < allWords.length; i++) {
+			let curWord = allWords[i];
+			if (curWord.isTag) {
+				break;
+			} else {
+				line_number_for_last_string_child = curWord.lineNumber;
+			}
+		}
+
+		if (line_number_for_last_string_child !== -1) {
+			return {
+				...word,
+				isLeaf: true,
+				closingTagPos: line_number_for_last_string_child - 1,
+			};
+		} else {
+			return { ...word, isLeaf: false };
+		}
+	});
+	return allWords;
+}
+
+function analyzeAndCorrectXML(allWords, lines, options) {
+	const {correctXML} = options;
+	const stack = new Stack();
+	const feedback = [];
+
+	for (let wordObj of allWords) {
+		if (!wordObj.isTag) continue;
+		if (wordObj.type === "opening") {
+			if (!stack.isEmpty()) {
+				const stackTop = stack.peek();
+				if (stackTop.isLeaf) {
+					if (correctXML)
+						lines[stackTop.closingTagPos] += ` </${getTagName(stackTop.word)}>`;
+					feedback.push(
+						`${stackTop.word} in line ${stackTop.lineNumber} has no corresponding closing tag`
+					);
+					stack.pop();
+				}
+			}
+			stack.push(wordObj);
+		} else {
+			if (stack.isEmpty()) {
+				if (correctXML)
+					lines.unshift(wordObj.word.replace("/", ""));
+				feedback.push(
+					`${wordObj.word} in line ${wordObj.lineNumber} has no corresponding opening tag`
+				);
+				continue;
+			}
+			const stackTop = stack.peek();
+			if (getTagName(stackTop) !== getTagName(wordObj)) {
+				let lineIndex = wordObj.lineNumber - 1;
+				if (correctXML) {
+					lines[lineIndex] = lines[lineIndex].replace(
+						getTagName(wordObj),
+						getTagName(stackTop)
+					);
+				}
+				feedback.push(
+					`${stackTop.word} in line number ${stackTop.lineNumber} ` +
+					`mismatch with closing tag ${wordObj.word} in line number ${wordObj.lineNumber}`
+				);
+			}
+			stack.pop();
+		}
+	}
+	while (!stack.isEmpty()) {
+		let stackTop = stack.peek();
+		stack.pop();
+		if(correctXML) lines.push(`</${getTagName(stackTop.word)}>`);
+		feedback.push(
+			`${stackTop.word} in line number ${stackTop.lineNumber} has no corresponding closing tag`
+		);
+	}
+	return feedback;
+}
+
+async function validateXML(absolutePath, correctXML) {
+	const lines = await readFile(absolutePath);
+	const allWords = getAllWords(lines);
+	const feedback = analyzeAndCorrectXML(allWords, lines, correctXML);
+	return {
+		feedback,
+		lines,
+	};
+}
+
+module.exports = validateXML;

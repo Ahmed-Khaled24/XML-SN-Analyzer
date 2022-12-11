@@ -19,5 +19,8 @@
   "homepage": "https://github.com/Ahmed-Khaled24/XML-Analyzer#readme",
   "devDependencies": {
     "electron": "^22.0.0"
+  },
+  "dependencies": {
+    "stack-lifo": "^0.1.6"
   }
 }
