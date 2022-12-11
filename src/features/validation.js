@@ -59,36 +59,52 @@ function getAllWords(lines) {
 			};
 		} else {
 			return { ...word, isLeaf: false };
-		}	
+		}
 	});
 	return allWords;
 }
 
-function correctXML(allWords, lines) {
+function analyzeAndCorrectXML(allWords, lines, options) {
+	const {correctXML} = options;
 	const stack = new Stack();
-	for (let word of allWords) {
-		if (!word.isTag) continue;
-			
-		if (word.type === "opening") {
-			if(!stack.isEmpty()) {
+	const feedback = [];
+
+	for (let wordObj of allWords) {
+		if (!wordObj.isTag) continue;
+		if (wordObj.type === "opening") {
+			if (!stack.isEmpty()) {
 				const stackTop = stack.peek();
-				if(stackTop.isLeaf){
-					lines[stackTop.closingTagPos] += ` </${getTagName(stackTop.word)}>`;
+				if (stackTop.isLeaf) {
+					if (correctXML)
+						lines[stackTop.closingTagPos] += ` </${getTagName(stackTop.word)}>`;
+					feedback.push(
+						`${stackTop.word} in line ${stackTop.lineNumber} has no corresponding closing tag`
+					);
 					stack.pop();
 				}
 			}
-			stack.push(word);
+			stack.push(wordObj);
 		} else {
 			if (stack.isEmpty()) {
-				lines.unshift(word.tag.replace("/", ""));
-				continue;	
-			} 
+				if (correctXML)
+					lines.unshift(wordObj.word.replace("/", ""));
+				feedback.push(
+					`${wordObj.word} in line ${wordObj.lineNumber} has no corresponding opening tag`
+				);
+				continue;
+			}
 			const stackTop = stack.peek();
-			if (getTagName(stackTop) !== getTagName(word)) {
-				let lineIndex = word.lineNumber - 1;
-				lines[lineIndex] = lines[lineIndex].replace(
-					getTagName(word),
-					getTagName(stackTop)
+			if (getTagName(stackTop) !== getTagName(wordObj)) {
+				let lineIndex = wordObj.lineNumber - 1;
+				if (correctXML) {
+					lines[lineIndex] = lines[lineIndex].replace(
+						getTagName(wordObj),
+						getTagName(stackTop)
+					);
+				}
+				feedback.push(
+					`${stackTop.word} in line number ${stackTop.lineNumber} ` +
+					`mismatch with closing tag ${wordObj.word} in line number ${wordObj.lineNumber}`
 				);
 			}
 			stack.pop();
@@ -97,16 +113,22 @@ function correctXML(allWords, lines) {
 	while (!stack.isEmpty()) {
 		let stackTop = stack.peek();
 		stack.pop();
-		lines.push(`</${getTagName(stackTop.word)}>`);
+		if(correctXML) lines.push(`</${getTagName(stackTop.word)}>`);
+		feedback.push(
+			`${stackTop.word} in line number ${stackTop.lineNumber} has no corresponding closing tag`
+		);
 	}
+	return feedback;
 }
 
-// returns feedback array contains all errors found;
-async function validateXML(absolutePath) {
+async function validateXML(absolutePath, correctXML) {
 	const lines = await readFile(absolutePath);
 	const allWords = getAllWords(lines);
-	correctXML(allWords, lines);
-	return lines;
+	const feedback = analyzeAndCorrectXML(allWords, lines, correctXML);
+	return {
+		feedback,
+		lines,
+	};
 }
 
 module.exports = validateXML;
