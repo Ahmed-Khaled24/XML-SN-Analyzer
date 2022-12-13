@@ -1,13 +1,9 @@
-const readFile = require('../utilities/readFile');
 
 
-async function minify(){
-    const lines = await readFile ("C:/Users/MAlek/OneDrive/Desktop/XML-Analyzer/sample.xml");
+ module.exports = function minify(lines){
     let size = lines.length;
     for(let i =0 ;i < size;i++){
         lines[i] = lines[i].trim().replace('\n', '');
     }
-console.log(lines.join(''));
+return lines.join('');
 }
-
-minify();
