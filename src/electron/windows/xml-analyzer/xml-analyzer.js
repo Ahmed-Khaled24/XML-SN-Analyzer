@@ -2,7 +2,9 @@ const { ipcRenderer } = require("electron");
 
 
 const inputTextArea = document.querySelector('.input-window textarea');
+const outputConsole = document.querySelector('.output-console textarea');
 const openFileBtn = document.querySelector('.open-file-btn');
+const validateBtn = document.querySelector('.validate-btn');
 inputTextArea.focus();
 
 
@@ -15,7 +17,14 @@ inputTextArea.addEventListener('keydown', (event) => {
 
 openFileBtn.addEventListener('click', (e) => {
     ipcRenderer.send('command', 'openFile');
-    ipcRenderer.on('commandResponse', (event, fileText) => {
+    ipcRenderer.on('openFileResponse', (event, fileText) => {
         inputTextArea.value = fileText;
     });
+});
+
+validateBtn.addEventListener('click', (e) => {
+    ipcRenderer.send('command', 'validate', inputTextArea.value);
+    ipcRenderer.on('validateResponse', (event, feedback) => {
+        outputConsole.value = `${feedback.length} error(s) found! \n` + feedback.join('\n');
+    })
 })

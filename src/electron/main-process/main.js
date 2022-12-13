@@ -1,6 +1,7 @@
 const path = require("node:path");
 const { app, BrowserWindow, ipcMain, Menu, dialog } = require("electron");
-const openFileHandler = require('./Handlers/openFile.handler')
+const openFileHandler = require("./Handlers/openFile.handler");
+const validateHandler = require("./Handlers/validate.handler");
 
 let mainWindow = null;
 
@@ -21,9 +22,15 @@ app.on("ready", () => {
 	);
 });
 
-ipcMain.on("command", async (event, command) => {
+ipcMain.on("command", async (event, command, data) => {
 	switch (command) {
-		case "openFile":
+		case "openFile":{
 			await openFileHandler(event);
+            break;
+        }
+		case "validate":{
+			validateHandler(event, data);
+            break;
+        }
 	}
 });
