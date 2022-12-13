@@ -67,12 +67,13 @@ textarea {
 	width: 100%;
 	background-color: inherit;
 	font-family: "jetBrains-mono";
-	color: inherit;
+	color: #ffd43b;
 	border: 1px solid #868e96;
 	border-radius: 5px;
 	padding: 8px;
 	font-size: 14px;
     resize: none;
+	line-height: 1.5;
 }
 
 textarea:focus-visible {
@@ -88,8 +89,13 @@ textarea:focus-visible {
 	grid-column: 1 / span 5;
 }
 
+.output-console textarea {
+	color: red;
+	font-size: 13px;
+}
+
 .btn {
-	height: 12%;
+	height: 10%;
 	font-family: "stellar-medium";
 	font-size: 18px;
 	border-radius: 5px;
@@ -103,6 +109,27 @@ textarea:focus-visible {
 	cursor: pointer;
 }
 
-.tag {
-    color: darkred;
+.open-file-btn{
+	background-color: #f1f3f5;
+	color: #343a40;
+	font-weight: bold;
+}
+
+@media screen and (min-width: 1250px) {
+	.btn {
+		font-size: 22px;
+	}
+	.app {
+		grid-template-columns: repeat(7, 1fr);
+		grid-template-rows: repeat(5, 1fr);
+	}
+	.input-window {
+		grid-column: 1 / span 6;
+	}
+	.buttons {
+		grid-column: 7;
+	}
+	.output-console{
+		grid-column: 1 / span 7;
+	}
 }
