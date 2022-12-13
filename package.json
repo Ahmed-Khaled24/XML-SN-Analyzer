@@ -21,6 +21,7 @@
     "electron": "^22.0.0"
   },
   "dependencies": {
+    "n-readlines": "^1.0.1",
     "stack-lifo": "^0.1.6"
   }
 }
