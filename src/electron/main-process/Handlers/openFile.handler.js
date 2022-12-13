@@ -1,8 +1,8 @@
 const {readFileElectron} = require('../../../utilities/readFile');
 const {dialog} = require('electron');
 
-function openFileHandler(event) {
-	const { canceled, filePaths } = dialog.showOpenDialog({
+async function openFileHandler(event) {
+	const { canceled, filePaths } = await dialog.showOpenDialog({
 		title: "Open XML file",
 		filters: [{ name: 'Text files', extensions: ["xml"] }],
 	});
