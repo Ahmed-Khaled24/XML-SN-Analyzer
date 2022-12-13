@@ -153,8 +153,7 @@ function analyzeAndCorrectXML(allWords, lines, correctXML) {
 	return feedback;
 }
 
-async function validateXML(absolutePath, correctXML) {
-	const lines = await readFile(absolutePath);
+function validateXML(lines, correctXML) {
 	const allWords = getAllWords(lines);
 	const feedback = analyzeAndCorrectXML(allWords, lines, correctXML);
 	return {
