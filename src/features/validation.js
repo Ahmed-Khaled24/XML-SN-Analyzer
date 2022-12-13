@@ -21,13 +21,42 @@ function getTagName(word) {
 	return word.replace("<", "").replace(">", "").replace("/", "");
 }
 
+function getLineAsWords(line) {
+	const openingTagRegex = /^<[a-zA-Z0-9]*>/; // opening tag if at the beginning of the line
+	const closingTagRegex = /^<\/[a-zA-Z0-9]*>/; // closing tag if at the beginning of the line
+	let words = [];
+	line = line.trim();
+	while (line) {
+		// extract an opening tag 
+		let openTag = line.match(openingTagRegex);
+		if (openTag) {
+			words.push(openTag[0]);
+			line = line.replace(openTag[0], "");
+		}
+		//extract the next data
+		for(let i = 0 ; i <= line.length ; i++){
+			if (line && (i === line.length || line[i] === '<')){
+				let data = line.substring(0, i);
+				words.push(data.trim());
+				line = line.replace(data, '');
+				break;
+			}
+		}
+		// extract a closing tag
+		let closeTag = line.match(closingTagRegex);
+		if (closeTag) {
+			words.push(closeTag[0]);
+			line = line.replace(closeTag[0], "");
+		}
+	}
+	return words;
+}
+
 function getAllWords(lines) {
-	let allWords = lines.map((line) => line.split(" "));
-	allWords = allWords.map((line) => line.filter((word) => word !== ""));
+	let allWords = lines.map((line) => getLineAsWords(line));
 	allWords = allWords.map((line, index) => {
 		return { line, lineNumber: index + 1 };
 	});
-
 	allWords = allWords.map(({ line, lineNumber }) => {
 		return line.map((word) => {
 			return {
@@ -39,8 +68,10 @@ function getAllWords(lines) {
 		});
 	});
 	allWords = allWords.flat();
+
+	// analyze if the tag is a leaf tag or not
 	allWords = allWords.map((word, index) => {
-		if (!word.isTag) return word;
+		if (word.type !== 'opening') return word;
 		let line_number_for_last_string_child = -1;
 		for (let i = index + 1; i < allWords.length; i++) {
 			let curWord = allWords[i];
@@ -50,7 +81,7 @@ function getAllWords(lines) {
 				line_number_for_last_string_child = curWord.lineNumber;
 			}
 		}
-
+		// has a string child
 		if (line_number_for_last_string_child !== -1) {
 			return {
 				...word,
@@ -58,14 +89,16 @@ function getAllWords(lines) {
 				closingTagPos: line_number_for_last_string_child - 1,
 			};
 		} else {
-			return { ...word, isLeaf: false };
+			return { 
+				...word,
+				isLeaf: false
+			};
 		}
 	});
 	return allWords;
 }
 
-function analyzeAndCorrectXML(allWords, lines, options) {
-	const {correctXML} = options;
+function analyzeAndCorrectXML(allWords, lines, correctXML) {
 	const stack = new Stack();
 	const feedback = [];
 
@@ -86,8 +119,7 @@ function analyzeAndCorrectXML(allWords, lines, options) {
 			stack.push(wordObj);
 		} else {
 			if (stack.isEmpty()) {
-				if (correctXML)
-					lines.unshift(wordObj.word.replace("/", ""));
+				if (correctXML) lines.unshift(wordObj.word.replace("/", ""));
 				feedback.push(
 					`${wordObj.word} in line ${wordObj.lineNumber} has no corresponding opening tag`
 				);
@@ -104,7 +136,7 @@ function analyzeAndCorrectXML(allWords, lines, options) {
 				}
 				feedback.push(
 					`${stackTop.word} in line number ${stackTop.lineNumber} ` +
-					`mismatch with closing tag ${wordObj.word} in line number ${wordObj.lineNumber}`
+						`mismatch with closing tag ${wordObj.word} in line number ${wordObj.lineNumber}`
 				);
 			}
 			stack.pop();
@@ -113,7 +145,7 @@ function analyzeAndCorrectXML(allWords, lines, options) {
 	while (!stack.isEmpty()) {
 		let stackTop = stack.peek();
 		stack.pop();
-		if(correctXML) lines.push(`</${getTagName(stackTop.word)}>`);
+		if (correctXML) lines.push(`</${getTagName(stackTop.word)}>`);
 		feedback.push(
 			`${stackTop.word} in line number ${stackTop.lineNumber} has no corresponding closing tag`
 		);
@@ -128,6 +160,7 @@ async function validateXML(absolutePath, correctXML) {
 	return {
 		feedback,
 		lines,
+		allWords,
 	};
 }
 
