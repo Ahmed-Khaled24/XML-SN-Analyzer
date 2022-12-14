@@ -2,7 +2,8 @@ const path = require("node:path");
 const { app, BrowserWindow, ipcMain, Menu, dialog } = require("electron");
 const openFileHandler = require("./Handlers/openFile.handler");
 const validateHandler = require("./Handlers/validate.handler");
-const correctHandler = require('./Handlers/correct.handler')
+const correctHandler = require('./Handlers/correct.handler');
+const minifyHandler = require('./Handlers/minify.handler');
 
 let mainWindow = null;
 
@@ -37,5 +38,9 @@ ipcMain.on("command", async (event, command, data) => {
             correctHandler(event, data);
             break;
         }
+		case "minify": {
+			minifyHandler(event, data);
+			break;
+		}
 	}
 });
