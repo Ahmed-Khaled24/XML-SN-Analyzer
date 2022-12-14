@@ -27,22 +27,24 @@ function getLineAsWords(line) {
 	let words = [];
 	line = line.trim();
 	while (line) {
-		// extract an opening tag 
+		// extract opening tag
 		let openTag = line.match(openingTagRegex);
 		if (openTag) {
 			words.push(openTag[0]);
 			line = line.replace(openTag[0], "");
 		}
 		//extract the next data
-		for(let i = 0 ; i <= line.length ; i++){
-			if (line && (i === line.length || line[i] === '<')){
+		for (let i = 0; i <= line.length; i++) {
+			if (line && (i === line.length || line[i] === "<")) {
 				let data = line.substring(0, i);
-				words.push(data.trim());
-				line = line.replace(data, '');
+				if (data) {
+					words.push(data.trim());
+					line = line.replace(data, "");
+				}
 				break;
 			}
 		}
-		// extract a closing tag
+		// extract closing tag
 		let closeTag = line.match(closingTagRegex);
 		if (closeTag) {
 			words.push(closeTag[0]);
@@ -50,6 +52,34 @@ function getLineAsWords(line) {
 		}
 	}
 	return words;
+}
+
+function analyzeIfLeaf(allWords) {
+	return allWords.map((word) => {
+		if (word.type !== "opening") return word;
+
+		let line_number_for_last_string_child = -1;
+		allWords.every((curWord) => {
+			if (!curWord.isTag) {
+				line_number_for_last_string_child = curWord.lineNumber;
+				return true;
+			}
+		});
+
+		// If has a string child so, it is a leaf
+		if (line_number_for_last_string_child !== -1) {
+			return {
+				...word,
+				isLeaf: true,
+				closingTagPos: line_number_for_last_string_child - 1,
+			};
+		} else {
+			return {
+				...word,
+				isLeaf: false,
+			};
+		}
+	});
 }
 
 function getAllWords(lines) {
@@ -69,33 +99,7 @@ function getAllWords(lines) {
 	});
 	allWords = allWords.flat();
 
-	// analyze if the tag is a leaf tag or not
-	allWords = allWords.map((word, index) => {
-		if (word.type !== 'opening') return word;
-		let line_number_for_last_string_child = -1;
-		for (let i = index + 1; i < allWords.length; i++) {
-			let curWord = allWords[i];
-			if (curWord.isTag) {
-				break;
-			} else {
-				line_number_for_last_string_child = curWord.lineNumber;
-			}
-		}
-		// has a string child
-		if (line_number_for_last_string_child !== -1) {
-			return {
-				...word,
-				isLeaf: true,
-				closingTagPos: line_number_for_last_string_child - 1,
-			};
-		} else {
-			return { 
-				...word,
-				isLeaf: false
-			};
-		}
-	});
-	return allWords;
+	return analyzeIfLeaf(allWords);
 }
 
 function analyzeAndCorrectXML(allWords, lines, correctXML) {
@@ -136,7 +140,7 @@ function analyzeAndCorrectXML(allWords, lines, correctXML) {
 				}
 				feedback.push(
 					`${stackTop.word} in line number ${stackTop.lineNumber} ` +
-						`mismatch with closing tag ${wordObj.word} in line number ${wordObj.lineNumber}`
+					`mismatch with closing tag ${wordObj.word} in line number ${wordObj.lineNumber}`
 				);
 			}
 			stack.pop();
