@@ -4,7 +4,7 @@ let counter=0
         this.name = name;
         this.value = ""
         this.attributes = {}
-        this.descendants = {}
+        this.descendants = []
         this.parent = null
         this.id = counter++
 
