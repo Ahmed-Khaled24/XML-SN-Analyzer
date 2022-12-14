@@ -1,10 +1,7 @@
 const findFirstDiff = (str1, str2) =>
   str2[[...str1].findIndex((el, index) => el !== str2[index])];
 
-  module.exports = function minify(file){
 
-    return terminateWhiteSpace(combine(file))
-}
 
 function combine(file){
     for(let i=0 ; i<file.length ;i++){
@@ -14,9 +11,7 @@ function combine(file){
 return file.join('').replace('\n',"");
 }
 function terminateWhiteSpace(combinedFile){
-    let size = combinedFile.length;
-    let openingRegex = /<[a-zA-z0-9"=\s-]+>/ ;
-    let closingRegex = /<\/[a-zA-z0-9]+>/;
+
     let openAndCloseRegex = /^(?=.*<\/[a-zA-z0-9]+>)(?=.*<[a-zA-z0-9"=\s-]+>).*$/;
 
         let tags = ['>' ,'<']
@@ -51,4 +46,9 @@ function terminateWhiteSpace(combinedFile){
     return spaceFreeLines
 
 
+}
+
+module.exports = function minify(file){
+
+    return terminateWhiteSpace(combine(file))
 }
