@@ -9,6 +9,7 @@ const correctBtn = document.querySelector('.correct-btn');
 const minifyBtn = document.querySelector('.minify-btn');
 const compressBtn = document.querySelector('.compress-btn');
 const convertToJSONBtn = document.querySelector('.convertToJSON-btn');
+const prettifyBtn = document.querySelector('.prettify-btn');
 
 inputTextArea.focus();
 
@@ -60,4 +61,11 @@ compressBtn.addEventListener('click',(e) => {
     ipcRenderer.on('compressResponse', (event, compressedFile) => {
         inputTextArea.value = compressedFile;
     })
+});
+
+prettifyBtn.addEventListener('click', (e) => {
+    ipcRenderer.send('command', 'prettify', inputTextArea.value);
+    ipcRenderer.on('prettifyResponse', (event, prettifiedData) => {
+        inputTextArea.value = prettifiedData;
+    });
 })

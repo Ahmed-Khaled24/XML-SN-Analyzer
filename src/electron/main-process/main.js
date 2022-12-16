@@ -6,6 +6,7 @@ const correctHandler = require('./Handlers/correct.handler');
 const minifyHandler = require("./Handlers/minify.handler");
 const xmlToJSONHandler = require("./Handlers/xml-to-json.handler");
 const compressionHandler = require("./Handlers/compression.handler");
+const prettifyHandler = require('./Handlers/prettify.handler');
 
 let mainWindow = null;
 
@@ -52,5 +53,9 @@ ipcMain.on("command", async (event, command, data) => {
             compressionHandler(event, data);
             break;
         }
+		case 'prettify': {
+			prettifyHandler(event, data);
+			break;
+		}
 	}
 });
