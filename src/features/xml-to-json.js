@@ -24,7 +24,6 @@ module.exports = function converToJSON (xmlFile){
         if(openingRegex.test(line)){
             let test = line.match(openingRegex)[0].split(" ")
 
-            //console.log(test);
             let openTagName = test[0].replace(/[><]/g,"").trim()
             if(flag === -1){
                 tagNode = new treeNode(openTagName)

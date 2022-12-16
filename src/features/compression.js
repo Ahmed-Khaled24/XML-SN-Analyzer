@@ -374,15 +374,20 @@ function encodeH(xmlFileMin,referenceTable){
     }
     return encodedFile
 }
+
+
 function huffManCompress(xmlFileMin){
     if(xmlFileMin.length ===1) xmlFileMin = xmlFileMin[0]
+
     let huffmanTree = constructHuffmanTree(xmlFileMin)
     getFinalTable(huffmanTree)
-    let referenceTable = binaryHuffmanTree.codeTable
+    let referenceTable = huffmanTree.codeTable
     let encodedFile = encodeH(xmlFileMin,referenceTable)
     encodedFile = encodedFile + '\n' + JSON.stringify(referenceTable)
     return encodedFile
 }
+
+
 function getDecodeTable(encodeTable){
     let decodeTable = {}
     for(const key in encodeTable){
@@ -404,9 +409,11 @@ function decodeH(encoding,referenceTable){
 }
 // takes the string that comes off the huffman compress function
 function huffManDecompress(compressedXmlFile){
+    compressedXmlFile = compressedXmlFile.split("\n")
     let encoding = compressedXmlFile[0]
     let referenceTable = getDecodeTable(JSON.parse(compressedXmlFile[1]))
     let decodedFile =decodeH(encoding,referenceTable)
+
     return decodedFile
 }
 
