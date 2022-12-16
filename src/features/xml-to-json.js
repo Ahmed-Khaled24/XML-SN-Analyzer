@@ -26,7 +26,6 @@ module.exports = function converToJSON (xmlFile){
 
             //console.log(test);
             let openTagName = test[0].replace(/[><]/g,"").trim()
-            console.log(openTagName);
             if(flag === -1){
                 tagNode = new treeNode(openTagName)
                 tree.root = tagNode
@@ -74,8 +73,7 @@ module.exports = function converToJSON (xmlFile){
         
     })
 
-    //return(memArr);
-    //console.log(tree.root);
+
     return (JSON.stringify(tree.root)) 
 }
 

@@ -48,9 +48,9 @@ minifyBtn.addEventListener('click', (e) => {
 
 })
 
-// convertToJSONBtn.addEventListener('click',(e) => {
-//     ipcRenderer.send('command', 'convertToJSON', inputTextArea.value);
-//     ipcRenderer.on('convertToJSONResponse', (event, json) => {
-//         inputTextArea.value = json;
-//     })
-// })
+convertToJSONBtn.addEventListener('click',(e) => {
+    ipcRenderer.send('command', 'convertToJSON', inputTextArea.value);
+    ipcRenderer.on('xmlToJSONResponse', (event, json) => {
+        inputTextArea.value = json;
+    })
+})

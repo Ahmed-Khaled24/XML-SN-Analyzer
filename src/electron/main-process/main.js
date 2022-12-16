@@ -4,6 +4,7 @@ const openFileHandler = require("./Handlers/openFile.handler");
 const validateHandler = require("./Handlers/validate.handler");
 const correctHandler = require('./Handlers/correct.handler');
 const minifyHandler = require("./Handlers/minify.handler");
+const xmlToJSONHandler = require("./Handlers/xml-to-json.handler")
 
 let mainWindow = null;
 
@@ -40,6 +41,10 @@ ipcMain.on("command", async (event, command, data) => {
         }
 		case "minify": {
             minifyHandler(event, data);
+            break;
+        }
+		case "convertToJSON": {
+            xmlToJSONHandler(event, data);
             break;
         }
 	}
