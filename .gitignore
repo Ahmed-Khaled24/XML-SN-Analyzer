@@ -3,6 +3,13 @@ node_modules/
 *src/features/test.js*
 *src/features/Decompressed.xml*
 *src/features/compressed.txt*
+*src/features/encFile.txt*
+*src/features/testMin.xml*
+*src/features/decFile.xml*
+
+
+
+
 
 
 .vscode/
