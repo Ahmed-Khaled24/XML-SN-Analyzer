@@ -1,14 +1,13 @@
 const Stack = require('stack-lifo');
-const treeNode = require('../utilities/treeNode.js');
-const  getNode  = require('../utilities/Tree.js');
-const Tree = require('../utilities/Tree')
+const {treeNode} = require('../utilities/treeNode.js');
+const {Tree} = require('../utilities/Tree')
 
 
 
 
 
 module.exports = function converToJSON (xmlFile){
-    let openingRegex = /<[a-zA-z0-9"=\s-]+>/ ;
+    let openingRegex = /<[a-zA-z0-9'"=\s-]+>/ ;
     let closingRegex = /<\/[a-zA-z0-9]+>/;
     // First opening tag flag
     let flag =-1
@@ -18,6 +17,7 @@ module.exports = function converToJSON (xmlFile){
     let tagNode;
 
     xmlFile.forEach((line) => {
+        line = line.trim()
         let content = line
         let recentNode = ""
 
@@ -41,7 +41,7 @@ module.exports = function converToJSON (xmlFile){
             for(let i=1 ; i<test.length ; i++){
                 let pair = test[i].split("=")
                 let key = pair[0]
-                let value = pair[1].replace(/[\">]/g,"")
+                let value = pair[1].replace(/[\"'>]/g,"")
                 console.log(`pair =>${value}`);
                 tagNode['attributes'][key] = value
 

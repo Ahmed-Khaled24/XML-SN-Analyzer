@@ -1,4 +1,10 @@
 const fs = require('fs')
+const {  huffmanNode} = require('../utilities/treeNode')
+const {  binaryHuffmanTree} = require('../utilities/Tree')
+const { log } = require('console')
+const { encode, decode } = require('punycode')
+
+
 
 //  function compressAndSave(root , filePath){
 //     root = JSON.parse(root)
@@ -151,7 +157,7 @@ function compressAndSaveLZW(file){
 
     return result
 }
-console.log(compressAndSaveLZW('geekific'));
+// console.log(compressAndSaveLZW('geekific'));
 function decompressAndSaveLZW(file){
     let dictionary = generateDic()
     let result = []
@@ -197,28 +203,222 @@ function generateDic(){
 
 //console.log(decompressAndSaveLZW(compressAndSaveLZW('geekificAllTheWay for me tooooo')));
 
-async function SaveFile(lines , filePath , control){
 
-    if(control === 'Decompressed'){
-        let logger = fs.createWriteStream(filePath, {
-            flags : 'a'
-        })
-    lines.forEach(line => {
-        line = line + '\n'
-        logger.write(line)
-    });
-}else {
-    let logger = fs.createWriteStream(filePath)
-    logger.write(lines)
-}
-    logger.end()
+function convert2Binary(file){
+    let binaryFile = ''
+    for(let i=0 ; i< file.length ;i++){
+        binaryFile += Number(file.charCodeAt(i)).toString(2).padStart(8,'0') 
 
-    
+    }
+    return binaryFile
 }
+
+function getFreqTable(xmlFileMin){
+    let freqTable= {}
+    if(xmlFileMin.length ===1) xmlFileMin = xmlFileMin[0]
+
+    for(let i=0 ; i< xmlFileMin.length ;i++){
+
+            letter = xmlFileMin[i]
+        
+        if(freqTable[letter] === undefined){
+            freqTable[letter] = 1
+        }else{
+            freqTable[letter]++
+
+        }
+    }
+    return freqTable
+}
+
+function getNodeArr(freqTable){
+    let result =[]
+    for(const key in freqTable){
+        let temp = new huffmanNode(key)
+        temp.freq = freqTable[key]
+        result.push(temp)
+    }
+    result.sort((a,b)=>{
+        if(a.freq < b.freq) return -1
+        else return 1
+    })
+    return result
+}
+
+// function findLeastPair(freqTable){
+//     let min = Number.MAX_SAFE_INTEGER
+//     let secondMin = 0
+//     for(const key in freqTable){
+//         test1 = freqTable[key]
+//         test2 = freqTable[min]
+//         if (freqTable[key] <= freqTable[min] || freqTable[min] === undefined){
+//             secondMin = min
+//             min = key ;
+//         }else if((freqTable[key] > freqTable[min] && freqTable[key] < freqTable[secondMin] ) || freqTable[secondMin] === undefined){
+//             secondMin = key
+//         }
+//     }
+
+//     return [min,secondMin]
+// }
+
+function getKey(value , table){
+    for(const key in table){
+        if(table[key] == value )return key
+    }
+    return -1
+
+}
+
+function insertSort(objArr,node){
+    let i=0 ,flag=1
+    while(i<objArr.length){
+        if(node.freq < objArr[i].freq){
+            flag=0
+            break
+        }
+        i++
+    }
+    if(flag){
+        return objArr.length
+    }
+    return i
+}
+// }
+// let arr =[
+//     {freq:3  },
+//     {freq:4 },
+//     {freq:5  },
+//     {freq:7  },
+//     {freq:9  }
+
+
+// ]
+// arr.shift()
+// console.log(arr);
+// let node = {freq:2 }
+
+// console.log(insertSort(arr,node));
+// arr.splice(insertSort(arr,node),0,node)
+// console.log(arr);
+function constructHuffmanTree(xmlFileMin){
+    if(xmlFileMin.length ===1) xmlFileMin = xmlFileMin[0]
+    let nodeArr = getNodeArr(getFreqTable(xmlFileMin))
+    while(nodeArr.length !== 1){
+        let temp = new huffmanNode('')
+        temp.freq = nodeArr[0].freq + nodeArr[1].freq
+        temp.descendants = [nodeArr[0],nodeArr[1]]
+        nodeArr.shift()
+        nodeArr.shift()
+        let index = insertSort(nodeArr,temp);
+        if(index ===0 ){
+            nodeArr[0] = temp
+        }else{
+            nodeArr.splice(index,0,temp)
+        }
+    }
+    let huffmanTree = new binaryHuffmanTree(nodeArr[0])
+    return huffmanTree
+}
+
+function getFinalTable(huffmanTree){
+   
+      huffmanTree.getCodes(huffmanTree.root)
+      return huffmanTree.codeTable
+}
+// let node1 = new huffmanNode('')
+// let node2 = new huffmanNode('')
+// let node3 = new huffmanNode('')
+// let node9 = new huffmanNode('')
+// let node4 = new huffmanNode('a')
+// let node5 = new huffmanNode('b')
+// let node6 = new huffmanNode('c')
+// let node7 = new huffmanNode('d')
+// let node8 = new huffmanNode('e')
+
+// node1.descendants = [node2,node3]
+// node2.descendants = [node4,node9]
+// node3.descendants = [node7,node8]
+// node9.descendants = [node5,node6]
+
+// //console.log(node1);
+// let testTree = new binaryHuffmanTree(node1)
+// console.log(getFinalTable(testTree));
+// let nodei1 = new huffmanNode('')
+// let nodei2 = new huffmanNode('')
+// let nodei3 = new huffmanNode('')
+// let nodei9 = new huffmanNode('')
+// let nodei4 = new huffmanNode('f')
+// let nodei5 = new huffmanNode('g')
+// let nodei6 = new huffmanNode('h')
+// let nodei7 = new huffmanNode('j')
+// let nodei8 = new huffmanNode('k')
+
+// nodei1.descendants = [nodei2,nodei3]
+// nodei2.descendants = [nodei4,nodei9]
+// nodei3.descendants = [nodei7,nodei8]
+// nodei9.descendants = [nodei5,nodei6]
+// testTree = new binaryHuffmanTree(nodei1)
+
+// console.log(getFinalTable(testTree));
+
+
+// console.log(binaryHuffmanTree.codeTable);
+
+
+// takes the string that comes off the minify function
+function encodeH(xmlFileMin,referenceTable){
+    let encodedFile=''
+    for(let i=0;i<xmlFileMin.length;i++){
+        encodedFile += referenceTable[xmlFileMin[i]]
+    }
+    return encodedFile
+}
+function huffManCompress(xmlFileMin){
+    if(xmlFileMin.length ===1) xmlFileMin = xmlFileMin[0]
+    let huffmanTree = constructHuffmanTree(xmlFileMin)
+    getFinalTable(huffmanTree)
+    let referenceTable = binaryHuffmanTree.codeTable
+    let encodedFile = encodeH(xmlFileMin,referenceTable)
+    encodedFile = encodedFile + '\n' + JSON.stringify(referenceTable)
+    return encodedFile
+}
+function getDecodeTable(encodeTable){
+    let decodeTable = {}
+    for(const key in encodeTable){
+        decodeTable[encodeTable[key]] = key
+    }
+    return decodeTable
+}
+function decodeH(encoding,referenceTable){
+    let decodedFile =''
+    let code =''
+    for(let i=0 ; i<encoding.length ;i++){
+        code += encoding[i]
+        if(referenceTable[code] !== undefined){
+            decodedFile += referenceTable[code]
+            code =''
+        }
+    }
+    return decodedFile
+}
+// takes the string that comes off the huffman compress function
+function huffManDecompress(compressedXmlFile){
+    let encoding = compressedXmlFile[0]
+    let referenceTable = getDecodeTable(JSON.parse(compressedXmlFile[1]))
+    let decodedFile =decodeH(encoding,referenceTable)
+    return decodedFile
+}
+
+
+
 
 
 
 module.exports = {
-    compressAndSaveLZW : compressAndSaveLZW,
-    decompressAndSaveLZW : decompressAndSaveLZW
+    huffManCompress:huffManCompress,
+    huffManDecompress:huffManDecompress
 }
+
+
+    

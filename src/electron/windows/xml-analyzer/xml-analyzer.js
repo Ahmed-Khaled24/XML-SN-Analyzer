@@ -7,6 +7,8 @@ const openFileBtn = document.querySelector('.open-file-btn');
 const validateBtn = document.querySelector('.validate-btn');
 const correctBtn = document.querySelector('.correct-btn');
 const minifyBtn = document.querySelector('.minify-btn');
+const convertToJSONBtn = document.querySelector('.convertToJSON-btn');
+
 inputTextArea.focus();
 
 
@@ -36,7 +38,7 @@ correctBtn.addEventListener('click', (e) => {
     ipcRenderer.on('correctResponse', (event, lines) => {
         inputTextArea.value = lines.join('\n');
     })
-});
+})
 
 minifyBtn.addEventListener('click', (e) => {
     ipcRenderer.send('command', 'minify', inputTextArea.value);
