@@ -74,4 +74,5 @@ pp.prototype.xml = function(text) {
 
 	return  (str[0] == '\n') ? str.slice(1) : str;
 };
-exports.pd= new pp();
+
+module.exports = new pp();
