@@ -6,10 +6,5 @@ node_modules/
 *src/features/encFile.txt*
 *src/features/testMin.xml*
 *src/features/decFile.xml*
-
-
-
-
-
-
 .vscode/
+test.xml

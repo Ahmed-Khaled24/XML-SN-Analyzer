@@ -1,0 +1,135 @@
+@font-face {
+	font-family: "jetBrains-mono";
+	src: url("../assets/fonts/JetBrainsMono[wght].ttf");
+}
+@font-face {
+	font-family: "stellar-regular";
+	src: url("../assets/fonts/Stellar-Regular.otf");
+}
+@font-face {
+	font-family: "stellar-medium";
+	src: url("../assets/fonts/Stellar-Medium.otf");
+}
+
+* {
+	padding: 0;
+	margin: 0;
+	box-sizing: border-box;
+}
+
+body {
+	min-height: 100vh;
+	min-width: 100vw;
+	color: #f1f3f5;
+	font-family: "roboto-regular";
+}
+
+.app {
+	width: 100%;
+	height: 100%;
+	padding: 16px;
+	display: grid;
+	grid-gap: 16px;
+	grid-template-columns: repeat(5, 1fr);
+	grid-template-rows: repeat(5, 1fr);
+}
+
+.buttons {
+	display: flex;
+	flex-direction: column;
+	grid-row: 1 / span 4;
+	grid-column: 5;
+	justify-content: space-between;
+}
+
+.input-window,
+.output-console {
+	background-color: #495057;
+	grid-column: 1 / span 4;
+	border-radius: 5px;
+	padding: 5px;
+	padding-top: 20px;
+	position: relative;
+}
+
+.title {
+	position: absolute;
+	top: 3px;
+	left: 5px;
+	font-size: 10px;
+	text-transform: uppercase;
+	letter-spacing: 1.5px;
+	font-family: "stellar-regular";
+}
+
+textarea {
+	height: 100%;
+	width: 100%;
+	background-color: inherit;
+	font-family: "jetBrains-mono";
+	color: #ffd43b;
+	border: 1px solid #868e96;
+	border-radius: 5px;
+	padding: 8px;
+	font-size: 14px;
+    resize: none;
+	line-height: 1.5;
+}
+
+textarea:focus-visible {
+	outline: none;
+}
+
+.input-window {
+	grid-row: 1 / span 4;
+}
+
+.output-console {
+	grid-row: 5;
+	grid-column: 1 / span 5;
+}
+
+.output-console textarea {
+	color: red;
+	font-size: 13px;
+}
+
+.btn {
+	height: 10%;
+	font-family: "stellar-medium";
+	font-size: 18px;
+	border-radius: 5px;
+	opacity: 0.75;
+	border: none;
+	background-color: #1864ab;
+	color: inherit;
+}
+.btn:hover {
+	opacity: 1;
+	cursor: pointer;
+}
+
+.open-file-btn{
+	background-color: #f1f3f5;
+	color: #343a40;
+	font-weight: bold;
+}
+
+@media screen and (min-width: 1250px) {
+	.btn {
+		font-size: 22px;
+	}
+	.app {
+		grid-template-columns: repeat(7, 1fr);
+		grid-template-rows: repeat(5, 1fr);
+	}
+	.input-window {
+		grid-column: 1 / span 6;
+	}
+	.buttons {
+		grid-column: 7;
+	}
+	.output-console{
+		grid-column: 1 / span 7;
+	}
+}
