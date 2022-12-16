@@ -6,6 +6,9 @@ const outputConsole = document.querySelector('.output-console textarea');
 const openFileBtn = document.querySelector('.open-file-btn');
 const validateBtn = document.querySelector('.validate-btn');
 const correctBtn = document.querySelector('.correct-btn');
+const minifyBtn = document.querySelector('.minify-btn');
+const convertToJSONBtn = document.querySelector('.convertToJSON-btn');
+
 inputTextArea.focus();
 
 
@@ -36,3 +39,18 @@ correctBtn.addEventListener('click', (e) => {
         inputTextArea.value = lines.join('\n');
     })
 })
+
+minifyBtn.addEventListener('click', (e) => {
+    ipcRenderer.send('command', 'minify', inputTextArea.value);
+    ipcRenderer.on('minifyResponse', (event, minifiedString) => {
+        inputTextArea.value = minifiedString;
+    })
+
+})
+
+// convertToJSONBtn.addEventListener('click',(e) => {
+//     ipcRenderer.send('command', 'convertToJSON', inputTextArea.value);
+//     ipcRenderer.on('convertToJSONResponse', (event, json) => {
+//         inputTextArea.value = json;
+//     })
+// })
