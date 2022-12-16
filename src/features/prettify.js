@@ -1,6 +1,6 @@
 function pp() {
 	this.shift = ['\n']; // array of shifts
-	this.step ='\t'; // 2 spaces
+	this.step ='    '; // 2 spaces
     var ix = 0;
 	// initialize array with shifts; nesting level == 100 //
 	for(ix=0;ix<100;ix++){
