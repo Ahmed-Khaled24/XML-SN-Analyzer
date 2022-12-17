@@ -55,16 +55,18 @@ function getLineAsWords(line) {
 }
 
 function analyzeIfLeaf(allWords) {
-	return allWords.map((word) => {
+	return allWords.map((word, index) => {
 		if (word.type !== "opening") return word;
 
 		let line_number_for_last_string_child = -1;
-		allWords.every((curWord) => {
+		for (let i = index + 1; i < allWords.length; i++) {
+			let curWord = allWords[i];
 			if (!curWord.isTag) {
 				line_number_for_last_string_child = curWord.lineNumber;
-				return true;
+			} else {
+				break;
 			}
-		});
+		}
 
 		// If has a string child so, it is a leaf
 		if (line_number_for_last_string_child !== -1) {
@@ -140,7 +142,7 @@ function analyzeAndCorrectXML(allWords, lines, correctXML) {
 				}
 				feedback.push(
 					`${stackTop.word} in line number ${stackTop.lineNumber} ` +
-					`mismatch with closing tag ${wordObj.word} in line number ${wordObj.lineNumber}`
+						`mismatch with closing tag ${wordObj.word} in line number ${wordObj.lineNumber}`
 				);
 			}
 			stack.pop();
