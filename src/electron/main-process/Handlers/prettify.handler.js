@@ -1,10 +1,7 @@
-const prettifyObj = require('../../../features/prettify');
+const prettify = require('../../../features/prettify');
 
 function prettifyHandler(event, data){
-    let prettifiedData = (prettifyObj.xml(data))
-    .split('\n')
-    .filter(line => line.trim() !== '')
-    .join('\n');
+    let prettifiedData = prettify(data);
     event.sender.send('prettifyResponse', prettifiedData);
 }
 

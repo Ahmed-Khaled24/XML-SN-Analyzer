@@ -75,4 +75,10 @@ pp.prototype.xml = function(text) {
 	return  (str[0] == '\n') ? str.slice(1) : str;
 };
 
-module.exports = new pp();
+module.exports = (data) => {
+	const prettifyObj = new pp(); 
+	let prettifiedData = prettifyObj.xml(data)
+	.split('\n')
+	.filter(line => line.trim() !== '')
+	return prettifiedData; // Array of strings
+};

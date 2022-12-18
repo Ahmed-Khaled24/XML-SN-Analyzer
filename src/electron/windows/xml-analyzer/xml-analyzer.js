@@ -66,6 +66,6 @@ compressBtn.addEventListener('click',(e) => {
 prettifyBtn.addEventListener('click', (e) => {
     ipcRenderer.send('command', 'prettify', inputTextArea.value);
     ipcRenderer.on('prettifyResponse', (event, prettifiedData) => {
-        inputTextArea.value = prettifiedData;
+        inputTextArea.value = prettifiedData.join('\n');
     });
 })
