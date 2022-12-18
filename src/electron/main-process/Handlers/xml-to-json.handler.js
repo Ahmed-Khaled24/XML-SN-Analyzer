@@ -1,8 +1,9 @@
 const convertToJSON = require('../../../features/xml-to-json')
+const prettify = require('../../../features/prettify')
 
 function xmlToJSONHandler(event, data) {
-    const lines = data.split('\n');
-    const json = convertToJSON(lines);
+    const prettifiedData =  prettify(data);
+    const json = convertToJSON(prettifiedData);
     event.sender.send('xmlToJSONResponse', json);
 }
 

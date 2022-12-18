@@ -73,7 +73,7 @@ module.exports = function converToJSON (xmlFile){
     })
 
 
-    return (JSON.stringify(tree.root)) 
+    return (JSON.stringify(tree.root , null ,3)) 
 }
 
 
