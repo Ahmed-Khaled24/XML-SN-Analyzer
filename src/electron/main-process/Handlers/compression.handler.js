@@ -9,7 +9,7 @@ function compressionHandler(event, data) {
         const compressedFile= huffManCompress(fileMin);
         event.sender.send('compressResponse', compressedFile);
     }catch(err){
-        dialog.showErrorBox('Error' , 'Cannot compress a minified/compressed file')
+        dialog.showErrorBox('Error' , 'Cannot compress a minified file')
     }
 
 }

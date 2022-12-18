@@ -10,6 +10,8 @@ const minifyBtn = document.querySelector('.minify-btn');
 const compressBtn = document.querySelector('.compress-btn');
 const convertToJSONBtn = document.querySelector('.convertToJSON-btn');
 const prettifyBtn = document.querySelector('.prettify-btn');
+const decompressBtn = document.querySelector('.decompress-btn');
+
 
 inputTextArea.focus();
 
@@ -62,10 +64,17 @@ compressBtn.addEventListener('click',(e) => {
         inputTextArea.value = compressedFile;
     })
 });
+decompressBtn.addEventListener('click',(e) => {
+    ipcRenderer.send('command', 'decompress', inputTextArea.value);
+    ipcRenderer.on('decompressResponse', (event, decompressedFile) => {
+        inputTextArea.value = decompressedFile;
+    })
+});
 
 prettifyBtn.addEventListener('click', (e) => {
+    console.log("A&A");
     ipcRenderer.send('command', 'prettify', inputTextArea.value);
     ipcRenderer.on('prettifyResponse', (event, prettifiedData) => {
         inputTextArea.value = prettifiedData.join('\n');
     });
-})
+});
