@@ -44,7 +44,7 @@ body {
 
 .input-window,
 .output-console {
-	background-color: #495057;
+	background-color: #343a40;
 	grid-column: 1 / span 4;
 	border-radius: 5px;
 	padding: 5px;
@@ -68,7 +68,7 @@ textarea {
 	background-color: inherit;
 	font-family: "jetBrains-mono";
 	color: #ffd43b;
-	border: 1px solid #868e96;
+	border: 1px solid #495057;
 	border-radius: 5px;
 	padding: 8px;
 	font-size: 14px;
