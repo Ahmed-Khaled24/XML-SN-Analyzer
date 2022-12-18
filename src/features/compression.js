@@ -245,22 +245,6 @@ function getNodeArr(freqTable){
     return result
 }
 
-// function findLeastPair(freqTable){
-//     let min = Number.MAX_SAFE_INTEGER
-//     let secondMin = 0
-//     for(const key in freqTable){
-//         test1 = freqTable[key]
-//         test2 = freqTable[min]
-//         if (freqTable[key] <= freqTable[min] || freqTable[min] === undefined){
-//             secondMin = min
-//             min = key ;
-//         }else if((freqTable[key] > freqTable[min] && freqTable[key] < freqTable[secondMin] ) || freqTable[secondMin] === undefined){
-//             secondMin = key
-//         }
-//     }
-
-//     return [min,secondMin]
-// }
 
 function getKey(value , table){
     for(const key in table){
@@ -271,36 +255,20 @@ function getKey(value , table){
 }
 
 function insertSort(objArr,node){
-    let i=0 ,flag=1
+    let i=0 ,findSortedPlace=0
     while(i<objArr.length){
         if(node.freq < objArr[i].freq){
-            flag=0
+            findSortedPlace=1
             break
         }
         i++
     }
-    if(flag){
+    if(findSortedPlace){
         return objArr.length
     }
     return i
 }
-// }
-// let arr =[
-//     {freq:3  },
-//     {freq:4 },
-//     {freq:5  },
-//     {freq:7  },
-//     {freq:9  }
 
-
-// ]
-// arr.shift()
-// console.log(arr);
-// let node = {freq:2 }
-
-// console.log(insertSort(arr,node));
-// arr.splice(insertSort(arr,node),0,node)
-// console.log(arr);
 function constructHuffmanTree(xmlFileMin){
     if(xmlFileMin.length ===1) xmlFileMin = xmlFileMin[0]
     let nodeArr = getNodeArr(getFreqTable(xmlFileMin))
@@ -377,6 +345,7 @@ function encodeH(xmlFileMin,referenceTable){
 
 
 function huffManCompress(xmlFileMin){
+
     if(xmlFileMin.length ===1) xmlFileMin = xmlFileMin[0]
 
     let huffmanTree = constructHuffmanTree(xmlFileMin)

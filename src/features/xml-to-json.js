@@ -10,7 +10,7 @@ module.exports = function converToJSON (xmlFile){
     let openingRegex = /<[a-zA-z0-9'"=\s-]+>/ ;
     let closingRegex = /<\/[a-zA-z0-9]+>/;
     // First opening tag flag
-    let flag =-1
+    let firstIteration =-1
     // Tree root
     let tree = new Tree()
     // Current tree node scope
@@ -25,16 +25,16 @@ module.exports = function converToJSON (xmlFile){
             let test = line.match(openingRegex)[0].split(" ")
 
             let openTagName = test[0].replace(/[><]/g,"").trim()
-            if(flag === -1){
+            if(firstIteration === -1){
                 tagNode = new treeNode(openTagName)
                 tree.root = tagNode
-                flag++
+                firstIteration++
             }
             else{
-                let temp2 =new treeNode(openTagName)
-                temp2.parent = tagNode.id
-                tagNode.descendants.push(temp2)
-                tagNode=temp2
+                let currentNode =new treeNode(openTagName)
+                currentNode.parent = tagNode.id
+                tagNode.descendants.push(currentNode)
+                tagNode=currentNode
             }
             for(let i=1 ; i<test.length ; i++){
                 let pair = test[i].split("=")
@@ -52,9 +52,9 @@ module.exports = function converToJSON (xmlFile){
 
         if(closingRegex.test(line)){
             content =  content.replace(closingRegex, "").trim()
-                let temp = Tree.getNode(tree.root , tagNode.parent)
+                let currentNode = Tree.getNode(tree.root , tagNode.parent)
                 recentNode = tagNode
-                tagNode = temp
+                tagNode = currentNode
         }
 
 

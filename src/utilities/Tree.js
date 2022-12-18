@@ -28,7 +28,6 @@ class Tree{
 }
 
 class binaryHuffmanTree{
-    static codeTable = {}
     constructor(root){
         this.root = root
         this.codeTable ={}
@@ -71,8 +70,7 @@ class binaryHuffmanTree{
             return
         }
 
-
-        this.getCodes(root.descendants[0] , 'left')
+        this.getCodes(root.descendants[0],'left')
         this.getCodes(root.descendants[1],'right')
         binary = binary.slice(0,-1)
 
