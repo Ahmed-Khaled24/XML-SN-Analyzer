@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Graph Analyzer</title>
+    <link rel="stylesheet" href="./graph-analyzer.css">
+</head>
+<body>
+
+    <div class="output-area">
+        <div class="graph-visualization">
+            <label> Graph visualization </label>
+            <div class="visualization-area"> 
+                <!-- filled by js -->
+            </div>
+        </div>
+        <div class="output-console">
+            <label> Output console </label>
+            <textarea disabled> </textarea>
+        </div>
+    </div>
+
+    <aside class="operations">
+        <section class="post-search">
+            <label> Search in posts </label>
+            <button> 
+                <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px"
+                width="30" height="30"
+                viewBox="0,0,256,256"
+                style="fill:#000000;">
+                <g fill="#ffffff" fill-rule="nonzero" stroke="none" stroke-width="1" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="10" stroke-dasharray="" stroke-dashoffset="0" font-family="none" font-weight="none" font-size="none" text-anchor="none" style="mix-blend-mode: normal"><g transform="scale(5.12,5.12)"><path d="M21,3c-9.39844,0 -17,7.60156 -17,17c0,9.39844 7.60156,17 17,17c3.35547,0 6.46094,-0.98437 9.09375,-2.65625l12.28125,12.28125l4.25,-4.25l-12.125,-12.09375c2.17969,-2.85937 3.5,-6.40234 3.5,-10.28125c0,-9.39844 -7.60156,-17 -17,-17zM21,7c7.19922,0 13,5.80078 13,13c0,7.19922 -5.80078,13 -13,13c-7.19922,0 -13,-5.80078 -13,-13c0,-7.19922 5.80078,-13 13,-13z"></path></g></g>
+                </svg>
+             </button>
+            <input type="text" placeholder="type a word">
+        </section>
+
+        <section class="mutual-friends">
+            <label> Mutual friends between two users </label>
+            <button> Get mutual friends </button>
+            <input class="first-id" placeholder="1st Id">
+            <input class="second-id" placeholder="2nd Id">
+        </section>
+
+        <section class="suggest-friends">
+            <label> Suggest friends to a user </label>
+            <button> Suggest friends </button>
+            <input type="text" placeholder="Id">
+        </section>
+
+        <section class="other-operations">
+            <button> Most influencer user </button>
+            <button> Most active user </button>
+            <button> Visualize </button>
+        </section>
+    </aside>
+    <script src="./graph-analyzer.js"></script>
+</body>
+</html>
