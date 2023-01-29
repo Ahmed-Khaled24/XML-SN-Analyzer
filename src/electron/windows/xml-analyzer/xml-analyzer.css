@@ -104,16 +104,20 @@ textarea:focus-visible {
 	border: none;
 	background-color: #1864ab;
 	color: inherit;
+	padding-bottom: 5px;
 }
 .btn:hover {
 	opacity: 1;
 	cursor: pointer;
 }
-
-.open-file-btn{
-	background-color: #f1f3f5;
-	color: #343a40;
-	font-weight: bold;
+.graph-btn{
+	transition-property: background-color;
+	transition-duration: 0.5s;
+	transition-timing-function: linear;
+}
+.graph-btn:hover{
+	background-color: #e3fafc;
+	color: #343a40; 
 }
 
 @media screen and (min-width: 1250px) {

@@ -3,7 +3,7 @@ const { ipcRenderer } = require("electron");
 
 const inputTextArea = document.querySelector('.input-window textarea');
 const outputConsole = document.querySelector('.output-console textarea');
-const openFileBtn = document.querySelector('.open-file-btn');
+const graphBtn = document.querySelector('.graph-btn');
 const validateBtn = document.querySelector('.validate-btn');
 const correctBtn = document.querySelector('.correct-btn');
 const minifyBtn = document.querySelector('.minify-btn');
@@ -14,20 +14,15 @@ const decompressBtn = document.querySelector('.decompress-btn');
 
 
 inputTextArea.focus();
-
+ipcRenderer.on('openFileResponse', (event, fileText) => {
+    inputTextArea.value = fileText;
+});
 
 inputTextArea.addEventListener('keydown', (event) => {
     if(event.keyCode == 9){
         event.preventDefault();
         inputTextArea.value += '    ';
     }    
-});
-
-openFileBtn.addEventListener('click', (e) => {
-    ipcRenderer.send('command', 'openFile');
-    ipcRenderer.on('openFileResponse', (event, fileText) => {
-        inputTextArea.value = fileText;
-    });
 });
 
 validateBtn.addEventListener('click', (e) => {
@@ -78,3 +73,7 @@ prettifyBtn.addEventListener('click', (e) => {
         inputTextArea.value = prettifiedData.join('\n');
     });
 });
+
+graphBtn.addEventListener('click' ,() => {
+    ipcRenderer.send('command', 'gotoGraphWindow');
+})
