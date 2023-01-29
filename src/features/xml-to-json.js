@@ -3,10 +3,92 @@ const {treeNode} = require('../utilities/treeNode.js');
 const {Tree} = require('../utilities/Tree')
 
 
+function compactJSON (xmlFile ,spacing){
+    let openingRegex = /<[a-zA-z0-9'"=\s-]+>/ ;
+    let closingRegex = /<\/[a-zA-z0-9]+>/;
 
 
 
-module.exports = function converToJSON (xmlFile){
+    // previous objects stack
+    let tags = [];
+    let root;
+
+    let content= "";
+    xmlFile.forEach((line) => {
+        line = line.trim()
+        content += line
+        if(openingRegex.test(line)){
+            let openTagName = line.match(openingRegex)[0].split(" ")[0].replace(/[><]/g,"").trim();
+            tags.push(openTagName)
+        }
+        content = content.replace(openingRegex,"").trim()
+        content = content.replace(closingRegex,"").trim();
+
+
+
+
+        if(closingRegex.test(line)){
+            let currentTag = tags[tags.length - 1];
+            let parentTag = tags[tags.length - 2];
+
+            if(tags.length === 1){
+                root = currentTag;
+            }else
+            if(content === "" && tags.length !== 1){
+                 if(typeof currentTag === "object" && typeof parentTag =="object"){
+                    let updatedEntry;
+                    let keys = Object.keys(parentTag);
+                    let lastKey = keys[keys.length - 1];
+                    // if(Array.isArray(Object.entries(parentTag).pop()[1]) && Array.isArray(Object.entries(currentTag).pop()[1]) && Object.entries(currentTag).length ===1 ){
+                    //     updatedEntry = {...parentTag , ...currentTag}
+                    //     tags[tags.length - 2] = updatedEntry
+                    // }else 
+                    if(Array.isArray(Object.entries(parentTag).pop()[1]) && Object.entries(parentTag).length == 1 ){
+                        updatedEntry = tags[tags.length - 2][lastKey].push(currentTag)
+                    }else if(Array.isArray(Object.entries(parentTag).pop()[1])){
+                        updatedEntry = {...parentTag , ...currentTag}
+                        tags[tags.length - 2] = updatedEntry
+                        }else{
+                            updatedEntry = {...parentTag , ...currentTag}
+                        tags[tags.length - 2] = updatedEntry
+                    }
+
+                 }else if(!Array.isArray(parentTag)){
+                    tags[tags.length - 2] = {};
+                    tags[tags.length - 2][parentTag] = [];
+                    tags[tags.length - 2][parentTag].push(currentTag);
+                }else if(Array.isArray(parentTag)){
+                    tags[tags.length - 2][parentTag].push(currentTag);
+                }
+            }else{
+                if(typeof parentTag !== "object"){
+                    tags[tags.length - 2] = {};
+               }
+               let keys = Object.keys(tags[tags.length - 2]);
+               let lastKey = keys[keys.length - 1];
+                if( tags[tags.length - 2][currentTag] !== undefined){
+                    tags[tags.length - 2][currentTag] += ", " + content;
+
+                }else{
+                    tags[tags.length - 2][currentTag] = content;
+
+                }
+
+            }
+            content = ""
+            tags.pop();
+        }
+
+
+        
+    })
+
+    return JSON.stringify(root,null,spacing);
+
+}
+
+
+function nonCompactJSON (xmlFile , spacing){
     let openingRegex = /<[a-zA-z0-9'"=\s-]+>/ ;
     let closingRegex = /<\/[a-zA-z0-9]+>/;
     // First opening tag flag
@@ -73,8 +155,12 @@ module.exports = function converToJSON (xmlFile){
     })
 
 
-    return (JSON.stringify(tree.root , null ,3)) 
+    return (JSON.stringify(tree.root , null ,spacing)) 
 }
 
+
+module.exports = function converToJSON(xmlFile , {compact , spacing}){
+    return compact === true? compactJSON(xmlFile,spacing) : nonCompactJSON(xmlFile,spacing);
+}
 
 
