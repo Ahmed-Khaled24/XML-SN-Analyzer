@@ -3,12 +3,11 @@ const {treeNode} = require('../utilities/treeNode.js');
 const {Tree} = require('../utilities/Tree')
 
 
-function nonCompactJSON (xmlFile ,spacing){
+function compactJSON (xmlFile ,spacing){
     let openingRegex = /<[a-zA-z0-9'"=\s-]+>/ ;
     let closingRegex = /<\/[a-zA-z0-9]+>/;
 
-    // xml file wrapper
-    let obj ={};
+
 
     // previous objects stack
     let tags = [];
@@ -40,13 +39,17 @@ function nonCompactJSON (xmlFile ,spacing){
                     let updatedEntry;
                     let keys = Object.keys(parentTag);
                     let lastKey = keys[keys.length - 1];
-                    if(Array.isArray(Object.entries(parentTag).pop()[1]) && Array.isArray(Object.entries(currentTag).pop()[1]) ){
+                    // if(Array.isArray(Object.entries(parentTag).pop()[1]) && Array.isArray(Object.entries(currentTag).pop()[1]) && Object.entries(currentTag).length ===1 ){
+                    //     updatedEntry = {...parentTag , ...currentTag}
+                    //     tags[tags.length - 2] = updatedEntry
+                    // }else 
+                    if(Array.isArray(Object.entries(parentTag).pop()[1]) && Object.entries(parentTag).length == 1 ){
+                        updatedEntry = tags[tags.length - 2][lastKey].push(currentTag)
+                    }else if(Array.isArray(Object.entries(parentTag).pop()[1])){
                         updatedEntry = {...parentTag , ...currentTag}
                         tags[tags.length - 2] = updatedEntry
-                    }else if(Array.isArray(Object.entries(parentTag).pop()[1]) ){
-                        updatedEntry = tags[tags.length - 2][lastKey].push(currentTag)
                         }else{
-                            updatedEntry = {...parentTag[lastKey] , ...currentTag}
+                            updatedEntry = {...parentTag , ...currentTag}
                         tags[tags.length - 2] = updatedEntry
                     }
 
@@ -59,15 +62,15 @@ function nonCompactJSON (xmlFile ,spacing){
                 }
             }else{
                 if(typeof parentTag !== "object"){
-                    tags[tags.length - 2] = {[parentTag] : {}};
+                    tags[tags.length - 2] = {};
                }
                let keys = Object.keys(tags[tags.length - 2]);
                let lastKey = keys[keys.length - 1];
-                if( tags[tags.length - 2][lastKey][currentTag] !== undefined){
-                    tags[tags.length - 2][lastKey][currentTag] += ", " + content;
+                if( tags[tags.length - 2][currentTag] !== undefined){
+                    tags[tags.length - 2][currentTag] += ", " + content;
 
                 }else{
-                    tags[tags.length - 2][lastKey][currentTag] = content;
+                    tags[tags.length - 2][currentTag] = content;
 
                 }
 
@@ -85,7 +88,7 @@ function nonCompactJSON (xmlFile ,spacing){
 }
 
 
-function compactJSON (xmlFile , spacing){
+function nonCompactJSON (xmlFile , spacing){
     let openingRegex = /<[a-zA-z0-9'"=\s-]+>/ ;
     let closingRegex = /<\/[a-zA-z0-9]+>/;
     // First opening tag flag
