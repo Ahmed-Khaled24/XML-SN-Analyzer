@@ -43,6 +43,7 @@ button {
 	background-color: #1864ab;
 	color: inherit;
 	height: 40px;
+	padding-bottom: 5px;
 }
 button:hover {
 	opacity: 1;
@@ -173,10 +174,20 @@ section.suggest-friends {
 }
 
 section.other-operations {
-	margin-top: 30px;
+	margin-top: 15px;
 	display: flex;
 	flex-direction: column;
 	gap: 10px;
+}
+
+.xml-btn{
+	transition-property: background-color;
+	transition-duration: 0.5s;
+	transition-timing-function: linear;
+}
+.xml-btn:hover{
+	background-color: #e3fafc;
+	color: #343a40; 
 }
 
 @media screen and (min-width: 1250px) and (min-height: 600px) {
