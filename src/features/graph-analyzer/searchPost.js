@@ -4,7 +4,7 @@ module.exports = function searchPosts(json, searchValue){
 
     graphObj.users.forEach(user => {
         user.posts.forEach(post =>{
-            if(post.body.includes(searchValue)){
+            if(post.body.toLowerCase().includes(searchValue.toLowerCase())){
                 if(result[user.id] === undefined){
                     result[user.id] = [];
                 }
