@@ -5,9 +5,9 @@ document.querySelector('.xml-btn').addEventListener('click', () => {
 })
 
     document.addEventListener('DOMContentLoaded' , ()=>{
-        const g = localStorage.getItem("textFieldValue");
+        const xml = localStorage.getItem("textFieldValue");
         localStorage.clear();
-        console.log(g);
+        console.log(xml);
         const s = new sigma({
             renderer: {
               container: 'graph-container',
@@ -21,7 +21,7 @@ document.querySelector('.xml-btn').addEventListener('click', () => {
               defaultEdgeColor: '#ccc'
             }
           });
-              ipcRenderer.send('command' , 'visualize')
+              ipcRenderer.send('command' , 'visualize' ,xml)
         ipcRenderer.on('visualizeReponse' , (event , data)=>{
             data = JSON.parse(data);
               s.graph.read(data)
