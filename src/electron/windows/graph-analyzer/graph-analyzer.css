@@ -88,6 +88,14 @@ input:focus-visible {
 	height: 100%;
 	background-color: #343a40;
 	border-radius: 5px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+#graph-container{
+	width: 90%;
+	height: 90%;
 }
 
 .output-console textarea {
