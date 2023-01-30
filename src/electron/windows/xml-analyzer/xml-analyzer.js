@@ -75,5 +75,7 @@ prettifyBtn.addEventListener('click', (e) => {
 });
 
 graphBtn.addEventListener('click' ,() => {
+    localStorage.setItem('textFieldValue',inputTextArea.value);
     ipcRenderer.send('command', 'gotoGraphWindow');
+
 })
