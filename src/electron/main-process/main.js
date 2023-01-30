@@ -8,6 +8,7 @@ const xmlToJSONHandler = require('./Handlers/xml-to-json.handler');
 const compressionHandler = require('./Handlers/compression.handler');
 const prettifyHandler = require('./Handlers/prettify.handler');
 const decompressionHandler = require('./Handlers/decompression.handler');
+const visualizationHandler = require('./Handlers/visualization.handler');
 
 let mainWindow = null;
 Menu.setApplicationMenu(
@@ -38,11 +39,15 @@ app.on('ready', () => {
 		},
 		show: false,
 	});
+	mainWindow.openDevTools();
 	mainWindow.loadFile(
 		path.join(__dirname, '../windows/xml-analyzer/xml-analyzer.html')
 	);
 	mainWindow.on('ready-to-show', () => {
 		mainWindow.show();
+		if(mainWindow.getURL().split('/').pop() === "graph-analyzer.html"){
+
+		}
 	});
 });
 
@@ -87,8 +92,8 @@ ipcMain.on('command', async (event, command, data) => {
 					__dirname,
 					'../windows/graph-analyzer/graph-analyzer.html'
 				)
-			);
-			break;
+				);
+				break;
 		}
 		case 'gotoXMLAnalyzer': {
 			mainWindow.loadFile(
@@ -97,6 +102,10 @@ ipcMain.on('command', async (event, command, data) => {
 					'../windows/xml-analyzer/xml-analyzer.html'
 				)
 			);
+			break;
+		}
+		case 'visualize': {
+			visualizationHandler(event, data);
 			break;
 		}
 	}
