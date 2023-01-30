@@ -8,7 +8,11 @@ const xmlToJSONHandler = require('./Handlers/xml-to-json.handler');
 const compressionHandler = require('./Handlers/compression.handler');
 const prettifyHandler = require('./Handlers/prettify.handler');
 const decompressionHandler = require('./Handlers/decompression.handler');
+const CreateGraphAdjList = require('../../features/json-to-graph');
+const prettify = require('../../features/prettify');
+const convertToJSON = require('../../features/xml-to-json');
 
+let ALGraph = null;
 let mainWindow = null;
 Menu.setApplicationMenu(
 	Menu.buildFromTemplate([
@@ -46,7 +50,6 @@ app.on('ready', () => {
 	});
 });
 
-// XML Analyzer handlers
 ipcMain.on('command', async (event, command, data) => {
 	switch (command) {
 		case 'openFile': {
@@ -88,6 +91,9 @@ ipcMain.on('command', async (event, command, data) => {
 					'../windows/graph-analyzer/graph-analyzer.html'
 				)
 			);
+			ALGraph = CreateGraphAdjList(
+				convertToJSON(prettify(data), { compact: true, spacing: 3 })
+			);
 			break;
 		}
 		case 'gotoXMLAnalyzer': {
@@ -101,3 +107,7 @@ ipcMain.on('command', async (event, command, data) => {
 		}
 	}
 });
+
+ipcMain.on('error', (event, err) => {
+	dialog.showErrorBox('Very big error!', err);
+})
