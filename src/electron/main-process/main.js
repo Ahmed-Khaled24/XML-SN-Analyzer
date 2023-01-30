@@ -15,6 +15,7 @@ const handlers = {
 		gotoGraph: require('./Handlers/graph-analyzer/gotoGraph.handler'),
 		visualize: require('./Handlers/graph-analyzer/visualization.handler'),
 		mostActiveUser: require('./Handlers/graph-analyzer/mostActiveUser.handler'),
+		searchPosts: require('./Handlers/graph-analyzer/searchPosts.handler'),
 		mostInfluencer: require('./Handlers/graph-analyzer/mostInfluencer.handler'),
 		suggestFriends: require('./Handlers/graph-analyzer/suggestFriends.handler'),
 		mutualFriends: require('./Handlers/graph-analyzer/mutualFriends.handler')
@@ -22,6 +23,7 @@ const handlers = {
 }
 
 let ALGraph = null;
+let json = null;
 let mainWindow = null;
 Menu.setApplicationMenu(
 	Menu.buildFromTemplate([
@@ -116,6 +118,10 @@ ipcMain.on('command', async (event, command, data) => {
 			handlers.graph.mostActiveUser(event, ALGraph);
 			break;
 		}
+		case 'searchPosts': {
+			handlers.graph.searchPosts(event, json, data);
+			break;
+		}
 		case 'suggestFriends' : {
 			handlers.graph.suggestFriends(event, ALGraph.outList, data);
 			break;
@@ -131,7 +137,8 @@ ipcMain.on('command', async (event, command, data) => {
 					'../windows/graph-analyzer/graph-analyzer.html'
 				)
 			);
-			ALGraph = handlers.graph.gotoGraph(data);
+			({json , ALGraph} = handlers.graph.gotoGraph(data));
+			
 			break;
 		}
 	}
