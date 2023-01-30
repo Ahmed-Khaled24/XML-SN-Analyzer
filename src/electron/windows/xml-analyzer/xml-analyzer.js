@@ -67,7 +67,6 @@ decompressBtn.addEventListener('click',(e) => {
 });
 
 prettifyBtn.addEventListener('click', (e) => {
-    console.log("A&A");
     ipcRenderer.send('command', 'prettify', inputTextArea.value);
     ipcRenderer.on('prettifyResponse', (event, prettifiedData) => {
         inputTextArea.value = prettifiedData.join('\n');
