@@ -17,6 +17,7 @@ const handlers = {
 		mostActiveUser: require('./Handlers/graph-analyzer/mostActiveUser.handler'),
 		mostInfluencer: require('./Handlers/graph-analyzer/mostInfluencer.handler'),
 		suggestFriends: require('./Handlers/graph-analyzer/suggestFriends.handler'),
+		mutualFriends: require('./Handlers/graph-analyzer/mutualFriends.handler')
 	}
 }
 
@@ -117,6 +118,10 @@ ipcMain.on('command', async (event, command, data) => {
 		}
 		case 'suggestFriends' : {
 			handlers.graph.suggestFriends(event, ALGraph.outList, data);
+			break;
+		}
+		case 'getMutualFriends' : {
+			handlers.graph.mutualFriends(event, ALGraph.outList, data);
 			break;
 		}
 		case 'gotoGraphWindow': {

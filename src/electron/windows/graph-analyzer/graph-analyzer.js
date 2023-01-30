@@ -3,6 +3,7 @@ const outputConsole = document.querySelector('.output-console textarea');
 const mostActiveBtn = document.querySelector('.most-active');
 const mostInfluencerBtn = document.querySelector('.most-influencer');
 const suggestBtn = document.querySelector('.suggest-friends button');
+const mutualFriendsBtn = document.querySelector('.mutual-friends button');
 
 document.querySelector('.xml-btn').addEventListener('click', () => {
 	ipcRenderer.send('command', 'gotoXMLAnalyzer');
@@ -24,12 +25,22 @@ mostActiveBtn.addEventListener('click', (e) => {
 
 suggestBtn.addEventListener('click', () => {
 	const userId = document.querySelector('.suggest-friends input').value;
-	if(!userId) return;
+	if (!userId) return;
 	ipcRenderer.send('command', 'suggestFriends', userId);
 	ipcRenderer.on('suggestFriendsRes', (event, suggestResponse) => {
 		outputConsole.value = suggestResponse;
-	})
-})
+	});
+});
+
+mutualFriendsBtn.addEventListener('click', () => {
+	const id1 = document.querySelector('.first-id').value;
+	const id2 = document.querySelector('.second-id').value;
+	if (!id1 || !id2) return;
+	ipcRenderer.send('command', 'getMutualFriends', [id1, id2]);
+	ipcRenderer.on('mutualFriendsRes', (event, mutualResponse) => {
+		outputConsole.value = mutualResponse;
+	})	
+});
 
 document.addEventListener('DOMContentLoaded', () => {
 	const xml = localStorage.getItem('textFieldValue');
