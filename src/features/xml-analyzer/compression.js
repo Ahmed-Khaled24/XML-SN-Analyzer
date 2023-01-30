@@ -3,6 +3,53 @@ const {  binaryHuffmanTree} = require('../../utilities/Tree')
 
 //-------------------------------------------------Decompression Helper Functions----------------------------------------//
 
+function getFreqTable(xmlFileMin){
+    let freqTable= {}
+    if(xmlFileMin.length ===1) xmlFileMin = xmlFileMin[0]
+
+    for(let i=0 ; i< xmlFileMin.length ;i++){
+
+            letter = xmlFileMin[i]
+        
+        if(freqTable[letter] === undefined){
+            freqTable[letter] = 1
+        }else{
+            freqTable[letter]++
+
+        }
+    }
+    return freqTable
+}
+
+function getNodeArr(freqTable){
+    let result =[]
+    for(const key in freqTable){
+        let temp = new huffmanNode(key)
+        temp.freq = freqTable[key]
+        result.push(temp)
+    }
+    result.sort((a,b)=>{
+        if(a.freq < b.freq) return -1
+        else return 1
+    })
+    return result
+}
+
+function insertSort(objArr,node){
+    let i=0 ,findSortedPlace=0
+    while(i<objArr.length){
+        if(node.freq < objArr[i].freq){
+            findSortedPlace=1
+            break
+        }
+        i++
+    }
+    if(findSortedPlace){
+        return objArr.length
+    }
+    return i
+}
+
 function constructHuffmanTree(xmlFileMin){
     if(xmlFileMin.length ===1) xmlFileMin = xmlFileMin[0]
     let nodeArr = getNodeArr(getFreqTable(xmlFileMin))
@@ -22,6 +69,7 @@ function constructHuffmanTree(xmlFileMin){
     let huffmanTree = new binaryHuffmanTree(nodeArr[0])
     return huffmanTree
 }
+
 
 function getFinalTable(huffmanTree){
    
