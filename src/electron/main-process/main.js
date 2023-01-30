@@ -9,6 +9,7 @@ const compressionHandler = require('./Handlers/compression.handler');
 const prettifyHandler = require('./Handlers/prettify.handler');
 const decompressionHandler = require('./Handlers/decompression.handler');
 const visualizationHandler = require('./Handlers/visualization.handler');
+const getMostActiveUser = require('./Handlers/mostActiveUser.handler')
 
 let mainWindow = null;
 Menu.setApplicationMenu(
@@ -106,6 +107,10 @@ ipcMain.on('command', async (event, command, data) => {
 		}
 		case 'visualize': {
 			visualizationHandler(event, data);
+			break;
+		}
+		case 'mostActiveUser': {
+			getMostActiveUser(event,data);
 			break;
 		}
 	}
