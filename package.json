@@ -22,6 +22,7 @@
   },
   "dependencies": {
     "n-readlines": "^1.0.1",
+    "sigma": "^2.4.0",
     "stack-lifo": "^0.1.6"
   }
 }
