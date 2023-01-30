@@ -11,6 +11,7 @@ const decompressionHandler = require('./Handlers/decompression.handler');
 const CreateGraphAdjList = require('../../features/json-to-graph');
 const prettify = require('../../features/prettify');
 const convertToJSON = require('../../features/xml-to-json');
+const getMostInfluencer = require('../../features/mostInfluencer');
 
 let ALGraph = null;
 let mainWindow = null;
@@ -47,6 +48,7 @@ app.on('ready', () => {
 	);
 	mainWindow.on('ready-to-show', () => {
 		mainWindow.show();
+		mainWindow.webContents.openDevTools();
 	});
 });
 
@@ -94,6 +96,7 @@ ipcMain.on('command', async (event, command, data) => {
 			ALGraph = CreateGraphAdjList(
 				convertToJSON(prettify(data), { compact: true, spacing: 3 })
 			);
+			console.log(ALGraph);
 			break;
 		}
 		case 'gotoXMLAnalyzer': {
@@ -104,6 +107,10 @@ ipcMain.on('command', async (event, command, data) => {
 				)
 			);
 			break;
+		}
+		case 'getMostInfluencer': {
+			let mostInfluencer = getMostInfluencer(ALGraph);
+			event.sender.send('mostInfluencerRes', mostInfluencer);
 		}
 	}
 });
