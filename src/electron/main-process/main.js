@@ -1,19 +1,20 @@
 const path = require('node:path');
 const { app, BrowserWindow, ipcMain, Menu, dialog } = require('electron');
-const openFileHandler = require('./Handlers/openFile.handler');
-const validateHandler = require('./Handlers/validate.handler');
-const correctHandler = require('./Handlers/correct.handler');
-const minifyHandler = require('./Handlers/minify.handler');
-const xmlToJSONHandler = require('./Handlers/xml-to-json.handler');
-const compressionHandler = require('./Handlers/compression.handler');
-const prettifyHandler = require('./Handlers/prettify.handler');
-const decompressionHandler = require('./Handlers/decompression.handler');
-const visualizationHandler = require('./Handlers/visualization.handler');
-const getMostActiveUser = require('./Handlers/mostActiveUser.handler');
+const openFileHandler = require('./Handlers/xml-analyzer/openFile.handler');
+const validateHandler = require('./Handlers/xml-analyzer/validate.handler');
+const correctHandler = require('./Handlers/xml-analyzer/correct.handler');
+const minifyHandler = require('./Handlers/xml-analyzer/minify.handler');
+const xmlToJSONHandler = require('./Handlers/xml-analyzer/xml-to-json.handler');
+const compressionHandler = require('./Handlers/xml-analyzer/compression.handler');
+const prettifyHandler = require('./Handlers/xml-analyzer/prettify.handler');
+const decompressionHandler = require('./Handlers/xml-analyzer/decompression.handler');
+const visualizationHandler = require('./Handlers/graph-analyzer/visualization.handler');
+const getMostActiveUser = require('./Handlers/graph-analyzer/mostActiveUser.handler');
+const mostInfluencerHandler = require('./Handlers/graph-analyzer/mostInfluencer.handler');
+
 const CreateGraphAdjList = require('../../features/json-to-graph');
 const prettify = require('../../features/prettify');
 const convertToJSON = require('../../features/xml-to-json');
-const getMostInfluencer = require('../../features/mostInfluencer');
 
 let ALGraph = null;
 let mainWindow = null;
@@ -89,18 +90,6 @@ ipcMain.on('command', async (event, command, data) => {
 			decompressionHandler(event, data);
 			break;
 		}
-		case 'gotoGraphWindow': {
-			mainWindow.loadFile(
-				path.join(
-					__dirname,
-					'../windows/graph-analyzer/graph-analyzer.html'
-				)
-			);
-			ALGraph = CreateGraphAdjList(
-				convertToJSON(prettify(data), { compact: true, spacing: 3 })
-			);
-			break;
-		}
 		case 'gotoXMLAnalyzer': {
 			mainWindow.loadFile(
 				path.join(
@@ -111,8 +100,7 @@ ipcMain.on('command', async (event, command, data) => {
 			break;
 		}
 		case 'getMostInfluencer': {
-			let mostInfluencer = getMostInfluencer(ALGraph);
-			event.sender.send('mostInfluencerRes', mostInfluencer);
+			mostInfluencerHandler(event, ALGraph);
 			break;
 		}
 		case 'visualize': {
@@ -121,6 +109,18 @@ ipcMain.on('command', async (event, command, data) => {
 		}
 		case 'mostActiveUser': {
 			getMostActiveUser(event, ALGraph);
+			break;
+		}
+		case 'gotoGraphWindow': {
+			mainWindow.loadFile(
+				path.join(
+					__dirname,
+					'../windows/graph-analyzer/graph-analyzer.html'
+				)
+			);
+			ALGraph = CreateGraphAdjList(
+				convertToJSON(prettify(data), { compact: true, spacing: 3 })
+			);
 			break;
 		}
 	}

@@ -1,4 +1,4 @@
-const {readFileElectron} = require('../../../utilities/readFile');
+const {readFileElectron} = require('../../../../utilities/readFile');
 const {dialog} = require('electron');
 
 async function openFileHandler(menuItem, browserWindow) {

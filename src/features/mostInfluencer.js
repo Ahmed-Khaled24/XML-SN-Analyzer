@@ -1,5 +1,4 @@
 module.exports = function getMostInfluencer({ inList }) {
-    console.log('getting most influencer');
 	let mostInfluencer = null;
 	let maxFollowers = 0;
 	for (let user in inList) {

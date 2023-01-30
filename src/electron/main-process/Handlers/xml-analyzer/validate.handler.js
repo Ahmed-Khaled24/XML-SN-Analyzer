@@ -1,5 +1,5 @@
 const {dialog} = require('electron');
-const validateXML = require('../../../features/validation')
+const validateXML = require('../../../../features/validation')
 
 function validateHandler(event, data) {
     const lines = data.split('\n');

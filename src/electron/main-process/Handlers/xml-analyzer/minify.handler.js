@@ -1,5 +1,5 @@
 const { dialog } = require("electron");
-const minify = require("../../../features/minify")
+const minify = require("../../../../features/minify")
 
 function minifyHandler(event, data){
     try{
