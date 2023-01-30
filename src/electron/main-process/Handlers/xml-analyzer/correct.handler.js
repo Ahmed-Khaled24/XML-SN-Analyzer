@@ -1,6 +1,6 @@
 const { dialog } = require("electron");
-const validateXML = require("../../../../features/validation");
-const prettify = require('../../../../features/prettify')
+const validateXML = require("../../../../features/xml-analyzer/validation");
+const prettify = require('../../../../features/xml-analyzer/prettify')
 
 
 async function correctHandler(event, data) {

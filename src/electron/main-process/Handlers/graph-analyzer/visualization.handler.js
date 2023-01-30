@@ -1,4 +1,4 @@
-const formatGraph = require('../../../../features/visualizationFormatter');
+const formatGraph = require('../../../../features/graph-analyzer/visualizationFormatter');
 
 function visualizationHandler(event, outList) {
 	const graphData = formatGraph(outList);

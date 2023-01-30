@@ -1,4 +1,4 @@
-const prettify = require('../../../../features/prettify');
+const prettify = require('../../../../features/xml-analyzer/prettify');
 
 function prettifyHandler(event, data){
     let prettifiedData = prettify(data);

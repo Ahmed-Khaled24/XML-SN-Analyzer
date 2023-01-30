@@ -1,4 +1,4 @@
-const readFile = require("../utilities/readFile");
+const readFile = require("../../utilities/readFile");
 const Stack = require("stack-lifo");
 
 function isTag(word) {

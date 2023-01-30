@@ -1,4 +1,4 @@
-const getMostConnected = require('../../../../features/maxConnectionsAnalysis');
+const getMostConnected = require('../../../../features/graph-analyzer/maxConnectionsAnalysis');
 
 function getMostActiveUser(event, ALGraph) {
 	const mostConnectedUser = getMostConnected(ALGraph);

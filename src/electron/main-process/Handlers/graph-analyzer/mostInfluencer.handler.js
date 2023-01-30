@@ -1,5 +1,5 @@
 
-const getMostInfluencer = require('../../../../features/mostInfluencer');
+const getMostInfluencer = require('../../../../features/graph-analyzer/mostInfluencer');
 
 module.exports = function mostInfluencerHandler (event, ALGraph){
     let mostInfluencer = getMostInfluencer(ALGraph);

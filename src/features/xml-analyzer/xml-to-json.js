@@ -1,6 +1,6 @@
 const Stack = require('stack-lifo');
-const {treeNode} = require('../utilities/treeNode.js');
-const {Tree} = require('../utilities/Tree')
+const {treeNode} = require('../../utilities/treeNode.js');
+const {Tree} = require('../../utilities/Tree')
 
 
 function compactJSON (xmlFile ,spacing){

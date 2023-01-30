@@ -1,6 +1,6 @@
 const fs = require('fs')
-const {  huffmanNode} = require('../utilities/treeNode')
-const {  binaryHuffmanTree} = require('../utilities/Tree')
+const {  huffmanNode} = require('../../utilities/treeNode')
+const {  binaryHuffmanTree} = require('../../utilities/Tree')
 const { log } = require('console')
 const { encode, decode } = require('punycode')
 

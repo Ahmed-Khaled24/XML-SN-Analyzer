@@ -1,6 +1,6 @@
 const { dialog } = require('electron');
-const {huffManCompress , huffManDecompress} = require('../../../../features/compression');
-const minify = require('../../../../features/minify');
+const {huffManCompress , huffManDecompress} = require('../../../../features/xml-analyzer/compression');
+const minify = require('../../../../features/xml-analyzer/minify');
 
 function compressionHandler(event, data) {
     try{

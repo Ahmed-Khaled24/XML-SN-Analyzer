@@ -12,9 +12,9 @@ const visualizationHandler = require('./Handlers/graph-analyzer/visualization.ha
 const getMostActiveUser = require('./Handlers/graph-analyzer/mostActiveUser.handler');
 const mostInfluencerHandler = require('./Handlers/graph-analyzer/mostInfluencer.handler');
 
-const CreateGraphAdjList = require('../../features/json-to-graph');
-const prettify = require('../../features/prettify');
-const convertToJSON = require('../../features/xml-to-json');
+const CreateGraphAdjList = require('../../features/graph-analyzer/json-to-graph');
+const prettify = require('../../features/xml-analyzer/prettify');
+const convertToJSON = require('../../features/xml-analyzer/xml-to-json');
 
 let ALGraph = null;
 let mainWindow = null;
