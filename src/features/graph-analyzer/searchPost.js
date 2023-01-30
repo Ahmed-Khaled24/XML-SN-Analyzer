@@ -7,11 +7,8 @@ module.exports = function searchPosts(json, searchValue){
             if(post.body.includes(searchValue)){
                 if(result[user.id] === undefined){
                     result[user.id] = [];
-                    result[user.id].push(post.body);
-                }else{
-                    result[user.id].push(post.body);
-
                 }
+                result[user.id].push(post.body);
             }
         })
     });
