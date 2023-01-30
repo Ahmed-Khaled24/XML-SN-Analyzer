@@ -8,6 +8,8 @@ const xmlToJSONHandler = require('./Handlers/xml-to-json.handler');
 const compressionHandler = require('./Handlers/compression.handler');
 const prettifyHandler = require('./Handlers/prettify.handler');
 const decompressionHandler = require('./Handlers/decompression.handler');
+const visualizationHandler = require('./Handlers/visualization.handler');
+const getMostActiveUser = require('./Handlers/mostActiveUser.handler');
 const CreateGraphAdjList = require('../../features/json-to-graph');
 const prettify = require('../../features/prettify');
 const convertToJSON = require('../../features/xml-to-json');
@@ -43,6 +45,7 @@ app.on('ready', () => {
 		},
 		show: false,
 	});
+	mainWindow.openDevTools();
 	mainWindow.loadFile(
 		path.join(__dirname, '../windows/xml-analyzer/xml-analyzer.html')
 	);
@@ -96,7 +99,6 @@ ipcMain.on('command', async (event, command, data) => {
 			ALGraph = CreateGraphAdjList(
 				convertToJSON(prettify(data), { compact: true, spacing: 3 })
 			);
-			console.log(ALGraph);
 			break;
 		}
 		case 'gotoXMLAnalyzer': {
@@ -111,6 +113,15 @@ ipcMain.on('command', async (event, command, data) => {
 		case 'getMostInfluencer': {
 			let mostInfluencer = getMostInfluencer(ALGraph);
 			event.sender.send('mostInfluencerRes', mostInfluencer);
+			break;
+		}
+		case 'visualize': {
+			visualizationHandler(event, ALGraph.outList);
+			break;
+		}
+		case 'mostActiveUser': {
+			getMostActiveUser(event, ALGraph);
+			break;
 		}
 	}
 });
