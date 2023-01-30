@@ -1,6 +1,8 @@
 const { ipcRenderer } = require('electron');
 const outputConsole = document.querySelector('.output-console textarea');
 const mostActiveBtn = document.querySelector('.most-active');
+const searchPostBtn = document.querySelector('.searchPost-btn');
+const searchArea = document.querySelector('.search-term');
 const mostInfluencerBtn = document.querySelector('.most-influencer');
 const suggestBtn = document.querySelector('.suggest-friends button');
 const mutualFriendsBtn = document.querySelector('.mutual-friends button');
@@ -23,6 +25,19 @@ mostActiveBtn.addEventListener('click', (e) => {
 	});
 });
 
+searchPostBtn.addEventListener('click' , (e)=>{
+	if(!searchArea.value) {
+		ipcRenderer.send('error' , 'Search term is empty');
+		return;
+	}
+	ipcRenderer.send('command', 'searchPosts' , searchArea.value );
+	ipcRenderer.on('searchPostsResponse' ,(event , data)=>{
+		outputConsole.value = data;
+	})
+
+
+})
+
 suggestBtn.addEventListener('click', () => {
 	const userId = document.querySelector('.suggest-friends input').value;
 	if (!userId) return;
@@ -43,7 +58,7 @@ mutualFriendsBtn.addEventListener('click', () => {
 });
 
 document.addEventListener('DOMContentLoaded', () => {
-	const xml = localStorage.getItem('textFieldValue');
+	
 	const s = new sigma({
 		renderer: {
 			container: 'graph-container',
@@ -57,7 +72,7 @@ document.addEventListener('DOMContentLoaded', () => {
 			edgeColor: 'default',
 		},
 	});
-	ipcRenderer.send('command', 'visualize', xml);
+	ipcRenderer.send('command', 'visualize');
 	ipcRenderer.on('visualizeRes', (event, data) => {
 		data = JSON.parse(data);
 		s.graph.read(data);
