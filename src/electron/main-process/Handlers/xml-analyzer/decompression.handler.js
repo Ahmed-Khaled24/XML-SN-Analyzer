@@ -8,7 +8,7 @@ function decompressionHandler(event, data) {
         const prettifiedData = prettify(decompressedFile).join("\n");
         event.sender.send('decompressResponse', prettifiedData);
     }catch(err){
-        dialog.showErrorBox('Error' , err.message)
+        dialog.showErrorBox('Invalid operation' , 'Invalid .tkf file')
     }
 
 }
