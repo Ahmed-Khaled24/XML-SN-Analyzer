@@ -33,11 +33,16 @@ mostActiveBtn.addEventListener('click', (e) => {
 
 searchPostBtn.addEventListener('click' , (e)=>{
 	if(!searchArea.value) {
-		ipcRenderer.send('error' , 'Search term is empty');
+		outputConsole.value = 'Error: search term input is empty';
 		return;
 	}
-	ipcRenderer.send('command', 'searchPosts' , searchArea.value );
+	if(searchArea.value.trim() ==""){
+		outputConsole.value = "No such post exists"
+		return;
+	}
+	ipcRenderer.send('command', 'searchPosts' , searchArea.value.trim() );
 	ipcRenderer.on('searchPostsResponse' ,(event , data)=>{
+		console.log(data);
 		outputConsole.value = data;
 	})
 
