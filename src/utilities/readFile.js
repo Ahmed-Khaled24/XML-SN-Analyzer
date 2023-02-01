@@ -4,15 +4,12 @@
     array of strings representing the lines of the provided file.
 */
 
-const { open } = require("node:fs/promises");
+const fs = require("fs");
 const NReadLines = require('n-readlines');
 
-async function readFile(absolutePath) {
-    const lines = []
-	const file = await open(absolutePath);
-	for await (const line of file.readLines()) {
-		lines.push(line);
-	}
+function readFile(absolutePath) {
+	const fileString = fs.readFileSync(absolutePath, 'utf8');
+    const lines = fileString.split('\n');
     return lines;
 }
 
