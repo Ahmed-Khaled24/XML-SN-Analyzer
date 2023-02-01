@@ -165,7 +165,7 @@ function validateXML(lines, correctXML) {
 	return {
 		feedback,
 		lines,
-		allWords,
+		valid: (feedback.length == 0),
 	};
 }
 
