@@ -12,13 +12,6 @@ const prettifyBtn = document.querySelector('.prettify-btn');
 const decompressBtn = document.querySelector('.decompress-btn');
 
 inputTextArea.focus();
-ipcRenderer.on('openFileResponse', (event, fileText) => {
-	inputTextArea.value = fileText;
-});
-
-ipcRenderer.on('giveMeYourData', (event) => {
-	ipcRenderer.send('hereIsMyData', inputTextArea.value);
-})
 
 inputTextArea.addEventListener('keydown', (event) => {
 	if (event.keyCode == 9) {
@@ -37,6 +30,7 @@ validateBtn.addEventListener('click', (e) => {
 	}
 	ipcRenderer.send('command', 'validate', inputTextArea.value);
 	ipcRenderer.on('validateResponse', (event, feedback) => {
+		outputConsole.style.color = 'red';
 		outputConsole.value =
 			`${feedback.length} error(s) found! \n` + feedback.join('\n');
 	});
@@ -51,9 +45,6 @@ correctBtn.addEventListener('click', (e) => {
 		return;
 	}
 	ipcRenderer.send('command', 'correct', inputTextArea.value);
-	ipcRenderer.on('correctResponse', (event, lines) => {
-		inputTextArea.value = lines.join('\n');
-	});
 });
 
 minifyBtn.addEventListener('click', (e) => {
@@ -65,9 +56,6 @@ minifyBtn.addEventListener('click', (e) => {
 		return;
 	}
 	ipcRenderer.send('command', 'minify', inputTextArea.value);
-	ipcRenderer.on('minifyResponse', (event, minifiedString) => {
-		inputTextArea.value = minifiedString;
-	});
 });
 
 convertToJSONBtn.addEventListener('click', (e) => {
@@ -79,9 +67,6 @@ convertToJSONBtn.addEventListener('click', (e) => {
 		return;
 	}
 	ipcRenderer.send('command', 'convertToJSON', inputTextArea.value);
-	ipcRenderer.on('xmlToJSONResponse', (event, json) => {
-		inputTextArea.value = json;
-	});
 });
 
 compressBtn.addEventListener('click', (e) => {
@@ -93,9 +78,6 @@ compressBtn.addEventListener('click', (e) => {
 		return;
 	}
 	ipcRenderer.send('command', 'compress', inputTextArea.value);
-	ipcRenderer.on('compressResponse', (event, compressedFile) => {
-		inputTextArea.value = compressedFile;
-	});
 });
 
 decompressBtn.addEventListener('click', (e) => {
@@ -107,9 +89,6 @@ decompressBtn.addEventListener('click', (e) => {
 		return;
 	}
 	ipcRenderer.send('command', 'decompress', inputTextArea.value);
-	ipcRenderer.on('decompressResponse', (event, decompressedFile) => {
-		inputTextArea.value = decompressedFile;
-	});
 });
 
 prettifyBtn.addEventListener('click', (e) => {
@@ -120,10 +99,7 @@ prettifyBtn.addEventListener('click', (e) => {
 		);
 		return;
 	}
-	ipcRenderer.send('command', 'prettify', inputTextArea.value);
-	ipcRenderer.on('prettifyResponse', (event, prettifiedData) => {
-		inputTextArea.value = prettifiedData.join('\n');
-	});
+	ipcRenderer.send('command', 'prettify', inputTextArea.value);	
 });
 
 graphBtn.addEventListener('click', () => {
@@ -135,4 +111,33 @@ graphBtn.addEventListener('click', () => {
 		return;
 	}
 	ipcRenderer.send('command', 'gotoGraphWindow', inputTextArea.value);
+});
+
+// Listeners 
+ipcRenderer.on('openFileResponse', (event, fileText) => {
+	inputTextArea.value = fileText;
+});
+ipcRenderer.on('giveMeYourData', (event) => {
+	ipcRenderer.send('hereIsMyData', outputConsole.value);
+})
+ipcRenderer.on('prettifyResponse', (event, prettifiedData) => {
+	inputTextArea.value = prettifiedData.join('\n');
+});
+ipcRenderer.on('decompressResponse', (event, decompressedFile) => {
+	outputConsole.style.color = 'white';
+	outputConsole.value = decompressedFile;
+});
+ipcRenderer.on('compressResponse', (event, compressedFile) => {
+	outputConsole.style.color = 'white';
+	outputConsole.value = compressedFile;
+});
+ipcRenderer.on('xmlToJSONResponse', (event, json) => {
+	outputConsole.style.color = 'white';
+	outputConsole.value = json;
+});
+ipcRenderer.on('minifyResponse', (event, minifiedString) => {
+	inputTextArea.value = minifiedString;
+});
+ipcRenderer.on('correctResponse', (event, lines) => {
+	inputTextArea.value = lines.join('\n');
 });
