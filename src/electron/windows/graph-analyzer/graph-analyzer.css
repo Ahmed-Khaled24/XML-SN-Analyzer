@@ -95,10 +95,12 @@ input:focus-visible {
 	background-color: #343a40;
 	border-radius: 5px;
 	display: flex;
+	flex-direction: column;
 	justify-content: center;
 	align-items: center;
 }
 #utility-btn-wrapper{
+	align-self: flex-end;
 	display: flex;
 	flex-direction: row;
 	justify-content: right;
