@@ -16,6 +16,10 @@ ipcRenderer.on('openFileResponse', (event, fileText) => {
 	inputTextArea.value = fileText;
 });
 
+ipcRenderer.on('giveMeYourData', (event) => {
+	ipcRenderer.send('hereIsMyData', inputTextArea.value);
+})
+
 inputTextArea.addEventListener('keydown', (event) => {
 	if (event.keyCode == 9) {
 		event.preventDefault();
