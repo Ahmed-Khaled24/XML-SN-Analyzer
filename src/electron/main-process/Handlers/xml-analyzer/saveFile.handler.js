@@ -15,8 +15,8 @@ function saveFileHandler(menuItem, browserWindow) {
 ipcMain.on('hereIsMyData', (event, data) => {
 	const path = dialog.showSaveDialogSync({
 		filters: [
-			{ name: 'JSON', extensions: ['json'] },
 			{ name: 'TKF', extensions: ['tkf'] },
+			{ name: 'JSON', extensions: ['json'] },
 		],
 	});
 	if(!path) return;
