@@ -133,5 +133,9 @@ resizeBtn.addEventListener('click',(e)=>{
 	// cyto.fit();
 })
 
-
+window.addEventListener('resize',  ()=> {
+	container = cyto.container().children[0]
+	container.style.width = "100%"
+	container.style.height="100%"
+  });
   
