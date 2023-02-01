@@ -1,8 +1,7 @@
 ### Application diagram
 
 ![diagram](/diagram.png)
-This figure describes every operation done in this app,    
-when a user want to perform operation on XML data the following sequence happens:
+This figure describes every operation done in this app, when a user wants to perform any operation on XML data the following sequence happens:
 1. the user type (or open) XML data and press any command button.
 2. the command is sent to the `main` function which read the command and direct it to the corresponding handler.
 3. the `handler` is responsible for ensuring that the given data is compatible with the `feature` function, then send the data to the corresponding feature function.
