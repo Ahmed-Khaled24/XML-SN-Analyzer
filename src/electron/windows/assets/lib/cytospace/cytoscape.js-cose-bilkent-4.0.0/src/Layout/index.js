@@ -1,12 +1,34 @@
 'use strict';
 
-var LayoutConstants = require('cose-base').layoutBase.LayoutConstants;
-var FDLayoutConstants = require('cose-base').layoutBase.FDLayoutConstants;
-var CoSEConstants = require('cose-base').CoSEConstants;
-var CoSELayout = require('cose-base').CoSELayout;
-var CoSENode = require('cose-base').CoSENode;
-var PointD = require('cose-base').layoutBase.PointD;
-var DimensionD = require('cose-base').layoutBase.DimensionD;
+var DimensionD = require('./DimensionD');
+var HashMap = require('./HashMap');
+var HashSet = require('./HashSet');
+var IGeometry = require('./IGeometry');
+var IMath = require('./IMath');
+var Integer = require('./Integer');
+var Point = require('./Point');
+var PointD = require('./PointD');
+var RandomSeed = require('./RandomSeed');
+var RectangleD = require('./RectangleD');
+var Transform = require('./Transform');
+var UniqueIDGeneretor = require('./UniqueIDGeneretor');
+var LGraphObject = require('./LGraphObject');
+var LGraph = require('./LGraph');
+var LEdge = require('./LEdge');
+var LGraphManager = require('./LGraphManager');
+var LNode = require('./LNode');
+var Layout = require('./Layout');
+var LayoutConstants = require('./LayoutConstants');
+var FDLayout = require('./FDLayout');
+var FDLayoutConstants = require('./FDLayoutConstants');
+var FDLayoutEdge = require('./FDLayoutEdge');
+var FDLayoutNode = require('./FDLayoutNode');
+var CoSEConstants = require('./CoSEConstants');
+var CoSEEdge = require('./CoSEEdge');
+var CoSEGraph = require('./CoSEGraph');
+var CoSEGraphManager = require('./CoSEGraphManager');
+var CoSELayout = require('./CoSELayout');
+var CoSENode = require('./CoSENode');
 
 var defaults = {
   // Called on `layoutready`
@@ -15,11 +37,6 @@ var defaults = {
   // Called on `layoutstop`
   stop: function () {
   },
-  // 'draft', 'default' or 'proof" 
-  // - 'draft' fast cooling rate 
-  // - 'default' moderate cooling rate 
-  // - "proof" slow cooling rate
-  quality: 'default',
   // include labels in node dimensions
   nodeDimensionsIncludeLabels: false,
   // number of ticks per frame; higher is faster but more jerky
@@ -102,13 +119,6 @@ var getUserOptions = function (options) {
     CoSEConstants.DEFAULT_COMPOUND_GRAVITY_RANGE_FACTOR = FDLayoutConstants.DEFAULT_COMPOUND_GRAVITY_RANGE_FACTOR = options.gravityRangeCompound;
   if (options.initialEnergyOnIncremental != null)
     CoSEConstants.DEFAULT_COOLING_FACTOR_INCREMENTAL = FDLayoutConstants.DEFAULT_COOLING_FACTOR_INCREMENTAL = options.initialEnergyOnIncremental;
-  
-  if (options.quality == 'draft')
-    LayoutConstants.QUALITY = 0;
-  else if(options.quality == 'proof')
-    LayoutConstants.QUALITY = 2;
-  else
-    LayoutConstants.QUALITY = 1;
 
   CoSEConstants.NODE_DIMENSIONS_INCLUDE_LABELS = FDLayoutConstants.NODE_DIMENSIONS_INCLUDE_LABELS = LayoutConstants.NODE_DIMENSIONS_INCLUDE_LABELS = options.nodeDimensionsIncludeLabels;
   CoSEConstants.DEFAULT_INCREMENTAL = FDLayoutConstants.DEFAULT_INCREMENTAL = LayoutConstants.DEFAULT_INCREMENTAL =
@@ -149,7 +159,7 @@ _CoSELayout.prototype.run = function () {
     var edge = edges[i];
     var sourceNode = this.idToLNode[edge.data("source")];
     var targetNode = this.idToLNode[edge.data("target")];
-    if(sourceNode !== targetNode && sourceNode.getEdgesBetween(targetNode).length == 0){
+    if(sourceNode.getEdgesBetween(targetNode).length == 0){
       var e1 = gm.add(layout.newEdge(), sourceNode, targetNode);
       e1.id = edge.id();
     }
@@ -175,7 +185,7 @@ _CoSELayout.prototype.run = function () {
     // Thigs to perform after nodes are repositioned on screen
     var afterReposition = function() {
       if (options.fit) {
-        options.cy.fit(options.eles, options.padding);
+        options.cy.fit(options.eles.nodes(), options.padding);
       }
 
       if (!ready) {
@@ -230,31 +240,29 @@ _CoSELayout.prototype.run = function () {
       if (typeof ele === "number") {
         ele = i;
       }
-      // If ele is a compound node, then its position will be defined by its children
-      if(!ele.isParent()){
-        var theId = ele.id();
-        var pNode = animationData[theId];
-        var temp = ele;
-        // If pNode is undefined search until finding position data of its first ancestor (It may be dummy as well)
-        while (pNode == null) {
-          pNode = animationData[temp.data('parent')] || animationData['DummyCompound_' + temp.data('parent')];
-          animationData[theId] = pNode;
-          temp = temp.parent()[0];
-          if(temp == undefined){
-            break;
-          }
+      var theId = ele.id();
+      var pNode = animationData[theId];
+      var temp = ele;
+      // If pNode is undefined search until finding position data of its first ancestor (It may be dummy as well)
+      while (pNode == null) {
+        pNode = animationData[temp.data('parent')] || animationData['DummyCompound_' + temp.data('parent')];
+        animationData[theId] = pNode;
+        temp = temp.parent()[0];
+        if(temp == undefined){
+          break;
         }
-        if(pNode != null){
-          return {
-            x: pNode.x,
-            y: pNode.y
-          };
-        } else{
-          return {
-            x: ele.position('x'),
-            y: ele.position('y')
-          };
-        }
+      }
+      if(pNode != null){
+        return {
+          x: pNode.x,
+          y: pNode.y
+        };
+      }
+      else{
+        return {
+          x: ele.x,
+          y: ele.y
+        };
       }
     });
 
@@ -376,15 +384,6 @@ _CoSELayout.prototype.stop = function () {
   return this; // chaining
 };
 
-var register = function( cytoscape ){
-//  var Layout = getLayout( cytoscape );
-
-  cytoscape('layout', 'cose-bilkent', _CoSELayout);
+module.exports = function get(cytoscape) {
+  return _CoSELayout;
 };
-
-// auto reg for globals
-if( typeof cytoscape !== 'undefined' ){
-  register( cytoscape );
-}
-
-module.exports = register;
