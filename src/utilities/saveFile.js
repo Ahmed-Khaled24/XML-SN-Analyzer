@@ -6,11 +6,10 @@
     saving. 
 */
 const fs = require('fs');
-async function saveFile(lines , filePath ){
-    let logger = fs.createWriteStream(filePath)
-    logger.write(lines)
-    logger.end()
-    
+async function saveFile(data /* String */, filePath) {
+	let logger = fs.createWriteStream(filePath);
+	logger.write(data);
+	logger.end();
 }
 
 module.exports = saveFile;
