@@ -1,8 +1,8 @@
 const path = require('node:path');
 const { app, BrowserWindow, ipcMain, Menu, dialog } = require('electron');
+const menuTemplate = require('./menuTemplate');
 const handlers = {
 	xml: {
-		openFile: require('./Handlers/xml-analyzer/openFile.handler'),
 		validate: require('./Handlers/xml-analyzer/validate.handler'),
 		correct: require('./Handlers/xml-analyzer/correct.handler'),
 		minify: require('./Handlers/xml-analyzer/minify.handler'),
@@ -26,18 +26,7 @@ let ALGraph = null;
 let json = null;
 let mainWindow = null;
 Menu.setApplicationMenu(
-	Menu.buildFromTemplate([
-		{
-			label: 'File',
-			submenu: [
-				{
-					label: 'Open',
-					click: handlers.xml.openFile,
-					accelerator: 'CommandOrControl+O',
-				},
-			],
-		},
-	])
+	Menu.buildFromTemplate(menuTemplate)
 );
 
 app.on('ready', () => {
@@ -53,13 +42,12 @@ app.on('ready', () => {
 		},
 		show: false,
 	});
-	mainWindow.openDevTools();
 	mainWindow.loadFile(
 		path.join(__dirname, '../windows/xml-analyzer/xml-analyzer.html')
 	);
 	mainWindow.on('ready-to-show', () => {
 		mainWindow.show();
-		mainWindow.webContents.openDevTools();
+		// mainWindow.webContents.openDevTools();
 	});
 });
 
@@ -145,5 +133,5 @@ ipcMain.on('command', async (event, command, data) => {
 });
 
 ipcMain.on('error', (event, err) => {
-	dialog.showErrorBox('Very big error!', err);
-})
+	dialog.showErrorBox('Invalid operation', err);
+});
