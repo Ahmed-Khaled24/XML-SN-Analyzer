@@ -4,7 +4,9 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/sigma.js/1.2.1/sigma.min.js"></script>
+    <script src="../assets/lib/cytospace/cytoscape.js-3.23.0/dist/cytoscape.min.js"></script>
+    <script src="../assets/lib/cytospace/cytoscape.js-cose-bilkent-4.0.0/cytoscape-cose-bilkent.js"></script>
+
     <title>Graph Analyzer</title>
     <link rel="stylesheet" href="./graph-analyzer.css">
 </head>
@@ -14,8 +16,12 @@
         <div class="graph-visualization">
             <label> Graph visualization </label>
             <div class="visualization-area"> 
+                <div id="utility-btn-wrapper">
+                    <button id="zoomIn-btn" class="utility-btn">&#x2795;</button>
+                    <button id="zoomOut-btn" class="utility-btn">&#x2796;</button>
+                    <button id="resize-btn" class="utility-btn">&#x21BA;</button>
+                </div>
                 <div id="graph-container">
-                    <!-- filled by js -->
                 </div>
             </div>
         </div>

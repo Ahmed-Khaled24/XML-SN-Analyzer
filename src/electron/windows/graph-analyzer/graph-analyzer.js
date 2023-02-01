@@ -1,4 +1,8 @@
-const { ipcRenderer } = require('electron');
+const { ipcRenderer, autoUpdater } = require('electron');
+const zoomInBtn = document.querySelector('#zoomIn-btn');
+const zoomOutBtn = document.querySelector('#zoomOut-btn');
+const resizeBtn = document.querySelector('#resize-btn');
+const graphContainer = document.querySelector('#graph-container')
 const outputConsole = document.querySelector('.output-console textarea');
 const mostActiveBtn = document.querySelector('.most-active');
 const searchPostBtn = document.querySelector('.searchPost-btn');
@@ -6,6 +10,8 @@ const searchArea = document.querySelector('.search-term');
 const mostInfluencerBtn = document.querySelector('.most-influencer');
 const suggestBtn = document.querySelector('.suggest-friends button');
 const mutualFriendsBtn = document.querySelector('.mutual-friends button');
+// Visualization global variable
+let cyto; 
 
 document.querySelector('.xml-btn').addEventListener('click', () => {
 	ipcRenderer.send('command', 'gotoXMLAnalyzer');
@@ -27,11 +33,16 @@ mostActiveBtn.addEventListener('click', (e) => {
 
 searchPostBtn.addEventListener('click' , (e)=>{
 	if(!searchArea.value) {
-		ipcRenderer.send('error' , 'Search term is empty');
+		outputConsole.value = 'Error: search term input is empty';
 		return;
 	}
-	ipcRenderer.send('command', 'searchPosts' , searchArea.value );
+	if(searchArea.value.trim() ==""){
+		outputConsole.value = "No such post exists"
+		return;
+	}
+	ipcRenderer.send('command', 'searchPosts' , searchArea.value.trim() );
 	ipcRenderer.on('searchPostsResponse' ,(event , data)=>{
+		console.log(data);
 		outputConsole.value = data;
 	})
 
@@ -57,25 +68,79 @@ mutualFriendsBtn.addEventListener('click', () => {
 	})	
 });
 
+
+// Visualization occurs once page is loaded
+
+
 document.addEventListener('DOMContentLoaded', () => {
-	
-	const s = new sigma({
-		renderer: {
-			container: 'graph-container',
-			type: 'canvas',
-		},
-		settings: {
-			defaultNodeColor: '#FFF',
-			maxNodeSize: 20,
-			minArrowSize: 15,
-			defaultEdgeColor: '#FFF',
-			edgeColor: 'default',
-		},
-	});
 	ipcRenderer.send('command', 'visualize');
-	ipcRenderer.on('visualizeRes', (event, data) => {
-		data = JSON.parse(data);
-		s.graph.read(data);
-		s.refresh();
+	ipcRenderer.on('visualizeRes', (event, graphData) => {
+		graphData = JSON.parse(graphData);
+		cyto = cytoscape({
+			container: graphContainer,
+			elements: graphData,
+			style: [
+				{
+					selector: '#graph-container',
+					style: {
+						height: '100vh !important',
+						width: '100vw !important'
+					  }
+				},
+			  {
+				selector: 'node',
+				style: {
+				  'background-color': '#e9ecef',
+				  label: 'data(label)',
+				  'text-valign': 'center',
+				  'text-halign': 'center'
+				}
+			  },
+			  {
+				selector: 'edge',
+				style: {
+				  'line-color': '#fcc419',
+				  'curve-style': 'bezier',
+				  'target-arrow-color': 'black',
+				  'target-arrow-fill': 'filled',
+				  'target-arrow-shape': 'triangle',
+				  'target-arrow-size': 40
+				}
+			  },
+			],
+			layout: {
+				name: 'cose-bilkent',		  
+			  // idealEdgeLength:100
+			}
+		  });
 	});
+
 });
+
+
+zoomInBtn.addEventListener('click' , ()=>{
+	cyto.zoom({
+		level: cyto.zoom() * 1.5,
+		position: { x: graphContainer.offsetWidth / 2, y: graphContainer.offsetHeight / 2  }
+	});	
+
+})
+zoomOutBtn.addEventListener('click' , ()=>{
+	cyto.zoom({
+		level: cyto.zoom() / 1.5,
+		position: { x: graphContainer.offsetWidth / 2, y: graphContainer.offsetHeight / 2  }
+	});	
+	
+})
+resizeBtn.addEventListener('click',(e)=>{
+	cyto.layout({name:'cose-bilkent'}).run();
+	// cyto.resize();
+	// cyto.fit();
+})
+
+window.addEventListener('resize',  ()=> {
+	container = cyto.container().children[0]
+	container.style.width = "100%"
+	container.style.height="100%"
+  });
+  
