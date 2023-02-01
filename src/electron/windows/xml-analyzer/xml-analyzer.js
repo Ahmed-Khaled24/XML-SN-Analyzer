@@ -29,11 +29,7 @@ validateBtn.addEventListener('click', (e) => {
 		return;
 	}
 	ipcRenderer.send('command', 'validate', inputTextArea.value);
-	ipcRenderer.on('validateResponse', (event, feedback) => {
-		outputConsole.style.color = 'red';
-		outputConsole.value =
-			`${feedback.length} error(s) found! \n` + feedback.join('\n');
-	});
+
 });
 
 correctBtn.addEventListener('click', (e) => {
@@ -88,7 +84,7 @@ decompressBtn.addEventListener('click', (e) => {
 		);
 		return;
 	}
-	ipcRenderer.send('command', 'decompress', inputTextArea.value);
+	ipcRenderer.send('command', 'decompress', outputConsole.value);
 });
 
 prettifyBtn.addEventListener('click', (e) => {
@@ -120,6 +116,11 @@ ipcRenderer.on('openFileResponse', (event, fileText) => {
 ipcRenderer.on('giveMeYourData', (event) => {
 	ipcRenderer.send('hereIsMyData', outputConsole.value);
 })
+ipcRenderer.on('validateResponse', (event, feedback) => {
+	outputConsole.style.color = 'red';
+	outputConsole.value =
+		`${feedback.length} error(s) found! \n` + feedback.join('\n');
+});
 ipcRenderer.on('prettifyResponse', (event, prettifiedData) => {
 	inputTextArea.value = prettifiedData.join('\n');
 });
