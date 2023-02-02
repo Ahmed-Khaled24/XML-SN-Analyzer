@@ -8,6 +8,7 @@ const correctBtn = document.querySelector('.correct-btn');
 const minifyBtn = document.querySelector('.minify-btn');
 const compressBtn = document.querySelector('.compress-btn');
 const convertToJSONBtn = document.querySelector('.convertToJSON-btn');
+const JSONTypeSelector = document.querySelector('.to-xml-btn select');
 const prettifyBtn = document.querySelector('.prettify-btn');
 const decompressBtn = document.querySelector('.decompress-btn');
 
@@ -29,7 +30,6 @@ validateBtn.addEventListener('click', (e) => {
 		return;
 	}
 	ipcRenderer.send('command', 'validate', inputTextArea.value);
-
 });
 
 correctBtn.addEventListener('click', (e) => {
@@ -62,7 +62,10 @@ convertToJSONBtn.addEventListener('click', (e) => {
 		);
 		return;
 	}
-	ipcRenderer.send('command', 'convertToJSON', inputTextArea.value);
+	ipcRenderer.send('command', 'convertToJSON', {
+		data: inputTextArea.value,
+		type: JSONTypeSelector.value,
+	});
 });
 
 compressBtn.addEventListener('click', (e) => {
@@ -95,7 +98,7 @@ prettifyBtn.addEventListener('click', (e) => {
 		);
 		return;
 	}
-	ipcRenderer.send('command', 'prettify', inputTextArea.value);	
+	ipcRenderer.send('command', 'prettify', inputTextArea.value);
 });
 
 graphBtn.addEventListener('click', () => {
@@ -109,13 +112,13 @@ graphBtn.addEventListener('click', () => {
 	ipcRenderer.send('command', 'gotoGraphWindow', inputTextArea.value);
 });
 
-// Listeners 
+// Listeners
 ipcRenderer.on('openFileResponse', (event, fileText) => {
 	inputTextArea.value = fileText;
 });
 ipcRenderer.on('giveMeYourData', (event) => {
 	ipcRenderer.send('hereIsMyData', outputConsole.value);
-})
+});
 ipcRenderer.on('validateResponse', (event, feedback) => {
 	outputConsole.style.color = 'red';
 	outputConsole.value =

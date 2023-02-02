@@ -70,7 +70,7 @@ ipcMain.on('command', async (event, command, data) => {
 			break;
 		}
 		case 'convertToJSON': {
-			handlers.xml.xmlToJSON(event, data);
+			handlers.xml.xmlToJSON(event, data.data, data.type);
 			break;
 		}
 		case 'compress': {

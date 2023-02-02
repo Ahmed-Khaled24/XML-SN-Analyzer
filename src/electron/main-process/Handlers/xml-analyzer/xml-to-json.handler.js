@@ -3,7 +3,7 @@ const prettify = require('../../../../features/xml-analyzer/prettify');
 const validateXML = require('../../../../features/xml-analyzer/validation');
 const { dialog } = require('electron');
 
-function xmlToJSONHandler(event, data) {
+function xmlToJSONHandler(event, data, type) {
 	const { valid } = validateXML(data.split('\n'), false);
 	if (!valid) {
 		dialog.showErrorBox(
@@ -13,7 +13,10 @@ function xmlToJSONHandler(event, data) {
 		return;
 	}
 	const prettifiedData = prettify(data);
-	const json = convertToJSON(prettifiedData, { compact: true, spacing: 3 });
+	const json = convertToJSON(prettifiedData, {
+		compact: type === 'compact',
+		spacing: 3,
+	});
 	event.sender.send('xmlToJSONResponse', json);
 }
 
