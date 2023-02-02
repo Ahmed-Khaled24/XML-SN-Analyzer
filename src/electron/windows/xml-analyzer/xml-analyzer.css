@@ -110,6 +110,28 @@ textarea:focus-visible {
 	opacity: 1;
 	cursor: pointer;
 }
+.to-xml-btn {
+	width: 100%;
+	height: 10%;
+	display: flex;
+	justify-content: center;
+	gap:3px;
+}
+.convertToJSON-btn{
+	height: 100%;
+	padding-bottom: 5px;
+	width: 50%;
+}
+.to-xml-btn select{
+	width: 50%;
+	border-radius: 5px;
+	background-color: #495057;
+	color: #f1f3f5;
+	border: none;
+}
+.to-xml-btn select:focus-visible{
+	outline: none;
+}
 .graph-btn{
 	transition-property: background-color;
 	transition-duration: 0.5s;
@@ -121,6 +143,13 @@ textarea:focus-visible {
 }
 
 @media screen and (min-width: 1250px) {
+	.to-xml-btn select {
+		font-size: 14px;
+		width: 40%;
+	}
+	.convertToJSON-btn{
+		width: 60%;
+	}
 	.btn {
 		font-size: 22px;
 	}

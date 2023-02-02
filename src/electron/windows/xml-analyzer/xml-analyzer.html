@@ -21,10 +21,16 @@
             <button class="btn correct-btn"> Correct </button>
             <button class="btn prettify-btn"> Prettify </button>
             <button class="btn minify-btn"> Minify </button>
-            <button class="btn convertToJSON-btn"> XML to JSON </button>
+            <div class="to-xml-btn">
+                <button class="btn convertToJSON-btn"> To JSON </button>
+                <select> 
+                    <option value="compact"> compact </option>
+                    <option value="non compact"> non compact </option>
+                </select>
+            </div>
             <button class="btn compress-btn"> Compress </button>
             <button class="btn decompress-btn"> Decompress </button>
-            <button class="btn graph-btn"> Graph Analyzer </button>
+            <button class="btn graph-btn"> SN Analyzer </button>
         </aside>
     </div>
     <script src="xml-analyzer.js"></script>
