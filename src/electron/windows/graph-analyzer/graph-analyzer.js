@@ -69,13 +69,13 @@ zoomOutBtn.addEventListener('click', (e) => {
 });
 resizeBtn.addEventListener('click', (e) => {
 	cyto.layout({ name: 'cose-bilkent' }).run();
-	// cyto.resize();
-	// cyto.fit();
 });
 window.addEventListener('resize', (e) => {
 	container = cyto.container().children[0];
 	container.style.width = '100%';
 	container.style.height = '100%';
+	cyto.resize();
+	cyto.fit();
 });
 
 // Listeners
