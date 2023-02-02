@@ -36,8 +36,8 @@ This application is divided into two phases:
 - `Prettify` prettifies the xml data in the input window
 - `Minify` minified the input data in the input window
 - `To JSON`  takes xml data from input window  
-`compact` shows a compact json in output window.  
-`non-compact` shows non-compact json in output window.  reference
+    - `compact` shows a compact json in output window.  
+    - `non-compact` shows non-compact json in output window.  reference
 - `Compress` compresses the xml data and shows in output window (.tkf)
 - `Decompress` takes compressed data and shows it as prettified xml in output window
 - `SN analyzer` takes the valid xml data and goes to the next phase
@@ -85,4 +85,46 @@ For building your copy make sure you have node and npm installed on your machine
      npm run mac
      ```
      for windows, linux, and mac platforms respectively.
-   + Customize your build options using electron-builder  [**reference**](https://www.electron.build/)
+   + Customize your build options using electron-builder  [**reference**](https://www.electron.build/)  
+
+
+### Remarks
+1.  comments and attributes are not supported.
+2.  empty xml tags are ignored.
+
+3. social network xml must be formatted this way 
+``` xml 
+<users>
+    <user>
+        <id>1</id>
+        <name>Ahmed Ali</name>
+        <posts>
+            <post>
+                <body>
+                    Lorem ipsum dolor sit amet, 
+                </body>
+                <topics>
+                    <topic>
+                        economy
+                    </topic>
+                    <topic>
+                        finance
+                    </topic>
+                </topics>
+            </post>
+        </posts>
+        <followers>
+            <follower>
+                <id>2</id>
+            </follower>
+            <follower>
+                <id>3</id>
+            </follower>
+        </followers>
+    </user>
+</users>
+```
+- List of `users`.  
+   - each `user` must have an `id` and `name` , may have `followers` and `posts`.  
+  - each `follower` has an `id`.  
+  - each `post` has `body` and `topics`
