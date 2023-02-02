@@ -6,6 +6,14 @@ const { dialog } = require('electron');
 async function openFileHandler(menuItem, browserWindow) {
 	let dialogResult;
 
+	if (browserWindow.title === 'Graph Analyzer') {
+		dialog.showErrorBox(
+			'Invalid operation',
+			'Can not open file in this window'
+		);
+		return;
+	}
+
 	if (menuItem.label === 'XML file') {
 		dialogResult = await dialog.showOpenDialog({
 			title: 'Open XML file',
