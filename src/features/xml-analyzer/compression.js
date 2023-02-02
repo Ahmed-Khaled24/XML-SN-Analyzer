@@ -86,7 +86,7 @@ function encodeH(xmlFileMin,referenceTable){
 }
 
 function binary2ASCII(binary){
-    while(binary.length %16 !==0){
+    while(binary.length %8 !==0){
         binary = '0' + binary;
     }
     let base32 ='';
@@ -95,7 +95,7 @@ function binary2ASCII(binary){
     for(let i = 0; i<binary.length; i++ ){
          fourbits += binary[i]
          counter++;
-         if(fourbits.length === 16){
+         if(fourbits.length === 8){
             fourbits = parseInt(fourbits,2)
             fourbits = String.fromCharCode(fourbits)
             base32 += fourbits
@@ -136,7 +136,7 @@ function ASCII2Binary(letters){
     let res=''
     for(let i=0 ; i<letters.length ;i++){
         if(i!=0){
-            res+=letters[i].charCodeAt(0).toString(2).padStart(16,"0")
+            res+=letters[i].charCodeAt(0).toString(2).padStart(8,"0")
         }else{
             res+=letters[i].charCodeAt(0).toString(2)
         }
