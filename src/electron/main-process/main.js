@@ -1,6 +1,7 @@
 const path = require('node:path');
-const { app, BrowserWindow, ipcMain, Menu, dialog } = require('electron');
+const { app, BrowserWindow, ipcMain, Menu, dialog, shell } = require('electron');
 const menuTemplate = require('./menuTemplate');
+const {error, errorWithLink} = require('../../utilities/showError');
 const handlers = {
 	xml: {
 		validate: require('./Handlers/xml-analyzer/validate.handler'),
@@ -92,6 +93,8 @@ ipcMain.on('command', async (event, command, data) => {
 					'../windows/xml-analyzer/xml-analyzer.html'
 				)
 			);
+			ALGraph = null;
+			json = null;
 			break;
 		}
 		case 'getMostInfluencer': {
@@ -119,19 +122,23 @@ ipcMain.on('command', async (event, command, data) => {
 			break;
 		}
 		case 'gotoGraphWindow': {
+			({json , ALGraph} = handlers.graph.gotoGraph(data));
+			if(!ALGraph) break;	
 			mainWindow.loadFile(
 				path.join(
 					__dirname,
 					'../windows/graph-analyzer/graph-analyzer.html'
 				)
 			);
-			({json , ALGraph} = handlers.graph.gotoGraph(data));
-			
 			break;
 		}
 	}
 });
 
 ipcMain.on('error', (event, err) => {
-	dialog.showErrorBox('Invalid operation', err);
+	error('Invalid operation', err);
+});
+
+ipcMain.on('errorWithLink', (event, err, link) => {
+	errorWithLink('Invalid operation', err, link);
 });
