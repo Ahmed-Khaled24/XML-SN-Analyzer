@@ -46,9 +46,41 @@ mutualFriendsBtn.addEventListener('click', () => {
 });
 
 // Visualization occurs once page is loaded
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', (e) => {
 	ipcRenderer.send('command', 'visualize');
-	ipcRenderer.on('visualizeRes', (event, graphData) => {
+});
+zoomInBtn.addEventListener('click', (e) => {
+	cyto.zoom({
+		level: cyto.zoom() * 1.5,
+		position: {
+			x: graphContainer.offsetWidth / 2,
+			y: graphContainer.offsetHeight / 2,
+		},
+	});
+});
+zoomOutBtn.addEventListener('click', (e) => {
+	cyto.zoom({
+		level: cyto.zoom() / 1.5,
+		position: {
+			x: graphContainer.offsetWidth / 2,
+			y: graphContainer.offsetHeight / 2,
+		},
+	});
+});
+resizeBtn.addEventListener('click', (e) => {
+	cyto.layout({ name: 'cose-bilkent' }).run();
+	// cyto.resize();
+	// cyto.fit();
+});
+window.addEventListener('resize', (e) => {
+	container = cyto.container().children[0];
+	container.style.width = '100%';
+	container.style.height = '100%';
+});
+
+// Listeners
+ipcRenderer.on('visualizeRes', (event, graphData) => {
+	try {
 		graphData = JSON.parse(graphData);
 		cyto = cytoscape({
 			container: graphContainer,
@@ -84,41 +116,16 @@ document.addEventListener('DOMContentLoaded', () => {
 			],
 			layout: {
 				name: 'cose-bilkent',
-				// idealEdgeLength:100
 			},
 		});
-	});
+	} catch (err) {
+		sendErrorWithLink(
+			`Invalid Social Network Data
+		fix the data then try again`,
+			'https://github.com/Ahmed-Khaled24/XML-SN-Analyzer#how-to-install-and-build' // modify after write docs
+		);
+	}
 });
-zoomInBtn.addEventListener('click', () => {
-	cyto.zoom({
-		level: cyto.zoom() * 1.5,
-		position: {
-			x: graphContainer.offsetWidth / 2,
-			y: graphContainer.offsetHeight / 2,
-		},
-	});
-});
-zoomOutBtn.addEventListener('click', () => {
-	cyto.zoom({
-		level: cyto.zoom() / 1.5,
-		position: {
-			x: graphContainer.offsetWidth / 2,
-			y: graphContainer.offsetHeight / 2,
-		},
-	});
-});
-resizeBtn.addEventListener('click', (e) => {
-	cyto.layout({ name: 'cose-bilkent' }).run();
-	// cyto.resize();
-	// cyto.fit();
-});
-window.addEventListener('resize', () => {
-	container = cyto.container().children[0];
-	container.style.width = '100%';
-	container.style.height = '100%';
-});
-
-// Listeners
 ipcRenderer.on('mostInfluencerRes', (event, mostInfluencer) => {
 	outputConsole.value = `The most influencer is ${mostInfluencer}`;
 });
@@ -126,7 +133,6 @@ ipcRenderer.on('mostActiveUserResponse', (event, mostActiveUser) => {
 	outputConsole.value = `The most active user is ${mostActiveUser}`;
 });
 ipcRenderer.on('searchPostsResponse', (event, data) => {
-	console.log(data);
 	outputConsole.value = data;
 });
 ipcRenderer.on('suggestFriendsRes', (event, suggestResponse) => {
@@ -135,3 +141,8 @@ ipcRenderer.on('suggestFriendsRes', (event, suggestResponse) => {
 ipcRenderer.on('mutualFriendsRes', (event, mutualResponse) => {
 	outputConsole.value = mutualResponse;
 });
+
+
+function sendErrorWithLink(error, link) {
+	ipcRenderer.send('errorWithLink', error, link);
+}
