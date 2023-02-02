@@ -3,12 +3,17 @@
   "version": "1.0.0",
   "description": "xml formatter and social network analyzer cross-platform desktop application",
   "main": "src/electron/main-process/main.js",
+  "author": "Ahmed Khaled , Omar Fahmy",
   "scripts": {
     "start": "electron .",
     "watch": "nodemon --exec npm start",
     "win": "electron-builder -w",
     "linux": "electron-builder -l",
     "mac": "electron-builder -m"
+  },
+  "build": {
+    "executableName" : "XML-SN Analyzer",
+    "icon": "./app-icon.png"
   },
   "repository": {
     "type": "git",
