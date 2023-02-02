@@ -110,12 +110,10 @@ input:focus-visible {
 .utility-btn{
 	width: 40px;
 	height: 40px;
-	text-align: center;
-	font-size: 20px;
-	color: white;
+	padding: 0;
 }
-#resize-btn{
-	font-size: 30px;
+.utility-btn img {
+	width: 80%;
 }
 
 #graph-container{
