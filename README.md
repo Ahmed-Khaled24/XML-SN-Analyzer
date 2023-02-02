@@ -1,3 +1,60 @@
+# XML/Social-Network analyzer
+
+This application is divided into two phases:
+
+- `XML` which takes an xml file and do various operations on it:  
+`Validate`/ `Correct`/ `compress`/ `decompress`/ `convertToJSON`/ `minify`/ `prettify `
+
+- `Social-Network` which takes the social network written as an xml from the previous phase and do various operations on:  
+`SN visualization`/ `Search in Posts`/ `get Mutual users`/ `Most active user`/  
+`Most influencer user`/ `Suggest Friends`    
+
+*** `Note` The social network must be in this format  
+![sample](/sample.png)  
+
+
+### GUI Manual
+
+#### Menu bar
+- `open`  
+![open](/open.ong.png)  
+`Open File` opens xml file.  
+`Open Compressed` opens a compressed .tkf file.
+
+- `save`  
+![save](/save.png)  
+ `Save As` saves the content of the output window in the xml (.tkf or .json) in file system.
+
+
+#### XML Analyzer
+
+![XML window](/xml-window.png)
+
+
+- `Validate` validates the xml in the input window and shows errors if found in output window.
+- `Correct` correct errors shown in validate.
+- `Prettify` prettifies the xml data in the input window
+- `Minify` minified the input data in the input window
+- `To JSON`  takes xml data from input window  
+`compact` shows a compact json in output window.  
+`non-compact` shows non-compact json in output window.  reference
+- `Compress` compresses the xml data and shows in output window (.tkf)
+- `Decompress` takes compressed data and shows it as prettified xml in output window
+- `SN analyzer` takes the valid xml data and goes to the next phase
+
+#### Social Network Analyzer
+
+![SN window](/sn-window.png)
+
+
+- `Search in posts` case insensitive search in users posts.
+- `get Mutual Friends` get the mutual users that two users follow.
+- `Suggest friends` suggest users to follow based on mutual based on users you follow and follow you.
+- `Most influencer user` gets the most followed user.
+- `most active user` gets the users who followed the most users.
+- `XML Analyzer` moves back to the previous phase.
+
+
 ### Application diagram
 
 ![diagram](/diagram.png)

@@ -105,12 +105,22 @@ ipcRenderer.on('visualizeRes', (event, graphData) => {
 				{
 					selector: 'edge',
 					style: {
+						'label':'follows',
+						'text-rotation': 'autorotate',
+						'text-valign': 'center',
+						'text-halign': 'center',
+						'text-background-opacity': 0,
+						'text-background-color': '#ffffff',
+						'font-size': '0.4em',
+						'color': '#e9ecef',
 						'line-color': '#fcc419',
 						'curve-style': 'bezier',
 						'target-arrow-color': 'black',
 						'target-arrow-fill': 'filled',
 						'target-arrow-shape': 'triangle',
 						'target-arrow-size': 40,
+						'text-margin-y': 7
+
 					},
 				},
 			],
