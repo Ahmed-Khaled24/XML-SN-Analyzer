@@ -78,6 +78,7 @@ pp.prototype.xml = function(text) {
 module.exports = (data) => {
 	const prettifyObj = new pp(); 
 	let prettifiedData = prettifyObj.xml(data)
+	.replaceAll('undefined', ' ')
 	.split('\n')
 	.filter(line => line.trim() !== '')
 	return prettifiedData; // Array of strings
