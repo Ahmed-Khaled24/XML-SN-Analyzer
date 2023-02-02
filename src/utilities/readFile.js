@@ -5,7 +5,6 @@
 */
 
 const fs = require("fs");
-const NReadLines = require('n-readlines');
 
 function readFile(absolutePath) {
 	const fileString = fs.readFileSync(absolutePath, 'utf8');
@@ -13,14 +12,4 @@ function readFile(absolutePath) {
     return lines;
 }
 
-function readFileElectron(absolutePath){
-    const lines = [];
-    const lineReader = new NReadLines(absolutePath);
-    let currentLine = null;
-    while(currentLine = lineReader.next()){
-        lines.push(currentLine.toString('utf-8').replace('\r', ''));
-    }
-    return lines;
-}
-
-module.exports = {readFile, readFileElectron};
+module.exports = {readFile};
