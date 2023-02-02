@@ -14,7 +14,7 @@ For trying the project you can download the pre-build copy for windows platform 
 For building your copy make sure you have node and npm installed on your machine, then follow these instructions.
 1. Clone the repo
    ``` 
-   git clone https://github.com/Ahmed-Khaled24/XML-Analyzer.git
+   git clone https://github.com/Ahmed-Khaled24/XML-SN-Analyzer.git
     ```
 2. Install project dependencies 
     ``` 
