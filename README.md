@@ -1,6 +1,6 @@
 # XML/Social-Network analyzer
-## XML Formatter and Social Network Analyzer desktop cross-platform application 
----
+## XML Formatter and Social Network Analyzer cross-platform desktop application 
+
 **This application is divided into two phases:**
 
 - **XML formatter** which takes an XML file and do various operations:  
