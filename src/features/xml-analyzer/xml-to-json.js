@@ -35,6 +35,9 @@ function compactJSON (xmlFile ,spacing){
                 root = currentTag;
             }else
             if(content === "" && tags.length !== 1){
+                if(typeof currentTag == "string"){
+                
+                }else
                  if(typeof currentTag === "object" && typeof parentTag =="object"){
                     let updatedEntry;
                     let keys = Object.keys(parentTag);
