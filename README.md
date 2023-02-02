@@ -36,7 +36,7 @@ This application is divided into two phases:
 - `Prettify` prettifies the xml data in the input window
 - `Minify` minified the input data in the input window
 - `To JSON`  takes xml data from input window  
-`compact` shows a compact json in output window
+`compact` shows a compact json in output window.  
 `non-compact` shows non-compact json in output window.  reference
 - `Compress` compresses the xml data and shows in output window (.tkf)
 - `Decompress` takes compressed data and shows it as prettified xml in output window
