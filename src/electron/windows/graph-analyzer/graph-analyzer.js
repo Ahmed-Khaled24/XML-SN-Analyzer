@@ -132,7 +132,7 @@ ipcRenderer.on('visualizeRes', (event, graphData) => {
 		sendErrorWithLink(
 			`Invalid Social Network Data
 		fix the data then try again`,
-			'https://github.com/Ahmed-Khaled24/XML-SN-Analyzer#how-to-install-and-build' // modify after write docs
+			'https://github.com/Ahmed-Khaled24/XML-SN-Analyzer/tree/electron#remarks' 
 		);
 	}
 });

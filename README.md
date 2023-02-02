@@ -15,28 +15,28 @@
 #### **Menu bar**
   - open    
 ![open](./reamde-material/openfile.png)  
-`XML file` opens xml file.  
+`XML file` opens XML file.  
 `Compressed file` opens a compressed .tkf file.
 
   - save    
 ![save](./reamde-material/save.png)  
- `save as` saves the content of the output window in the xml (.tkf or .json) in file system.
+ `save as` saves the content of the output window in the XML (.tkf or .json) in file system.
 
 
 #### **XML Analyzer**    
 ![XML window](./reamde-material/xml-window.png)
 
 
-- `Validate` validates the xml in the input window and shows errors if found in output window.
+- `Validate` validates the XML in the input window and shows errors if found in output window.
 - `Correct` correct errors shown in validate.
-- `Prettify` prettifies the xml data in the input window
+- `Prettify` prettifies the XML data in the input window
 - `Minify` minified the input data in the input window
-- `To JSON`  takes xml data from input window  
+- `To JSON`  takes XML data from input window  
   + `compact` shows a compact JSON in output window.  
   + `non-compact` shows non-compact JSON in output window.  reference
-- `Compress` compresses the xml data and shows in output window (.tkf)
-- `Decompress` takes compressed data and shows it as prettified xml in output window
-- `SN analyzer` takes the valid xml data and goes to the next phase
+- `Compress` compresses the XML data and shows in output window (.tkf)
+- `Decompress` takes compressed data and shows it as prettified XML in output window
+- `SN analyzer` takes the valid XML data and goes to the next phase
 
 #### **Social Network Analyzer**
 
@@ -81,4 +81,45 @@ For building your copy make sure you have node and npm installed on your machine
      npm run mac
      ```
      for windows, linux, and mac platforms respectively.
-   + Customize your build options using electron-builder  [**reference**](https://www.electron.build/)
+   + Customize your build options using electron-builder  [**reference**](https://www.electron.build/)  
+
+
+### Remarks
+1.  comments and attributes are not supported.
+2.  empty XML tags are ignored.
+3. #### social network XML must be formatted this way 
+```XML 
+<users>
+    <user>
+        <id> 1 </id>
+        <name> Ahmed Ali </name>
+        <posts>
+            <post>
+                <body>
+                    Lorem ipsum dolor sit amet, 
+                </body>
+                <topics>
+                    <topic>
+                        economy
+                    </topic>
+                    <topic>
+                        finance
+                    </topic>
+                </topics>
+            </post>
+        </posts>
+        <followers>
+            <follower>
+                <id> 2 </id>
+            </follower>
+            <follower>
+                <id> 3 </id>
+            </follower>
+        </followers>
+    </user>
+</users>
+```
+- List of `users`.  
+  - each `user` must have an `id` and `name` , may have `followers` and `posts`.  
+  - each `follower` has an `id`.  
+  - each `post` has `body` and `topics`
