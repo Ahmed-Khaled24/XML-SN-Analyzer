@@ -12,9 +12,10 @@ function compactJSON (xmlFile ,spacing){
     // previous objects stack
     let tags = [];
     let root;
+    let result
 
     let content= "";
-    xmlFile.forEach((line,index,xmlFile) => {
+    xmlFile.forEach((line,index) => {
         line = line.trim()
         content += line
         if(openingRegex.test(line)){
@@ -33,10 +34,11 @@ function compactJSON (xmlFile ,spacing){
 
             if(tags.length === 1){
                 root = currentTag;
-                if(xmlFile.length === index + 1){
-                    return JSON.stringify(root,null,spacing);
+                if(index === xmlFile.length -1){
+                    // do nothing there is a single parent
                 }else{
-                    throw new Error("No wrapper tag")
+                    throw new Error("No wrapper tag");
+                    
                 }
             }else
             if(content === "" && tags.length !== 1){
@@ -90,6 +92,7 @@ function compactJSON (xmlFile ,spacing){
 
         
     })
+    return JSON.stringify(root,null,spacing);
 
 
 }
