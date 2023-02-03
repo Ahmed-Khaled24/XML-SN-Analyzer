@@ -86,7 +86,8 @@ For building your copy make sure you have node and npm installed on your machine
 
 ### Remarks
 1.  comments and attributes are not supported
-2.  empty XML tags are ignored
+2. XML must have a single parent (wrapper tag) for compact json to work properly
+3.  empty XML tags are ignored
 3. #### social network XML must be formatted this way 
 ```XML 
 <users>
