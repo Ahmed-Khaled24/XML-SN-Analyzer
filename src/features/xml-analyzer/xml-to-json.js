@@ -14,7 +14,7 @@ function compactJSON (xmlFile ,spacing){
     let root;
 
     let content= "";
-    xmlFile.forEach((line) => {
+    xmlFile.forEach((line,index,xmlFile) => {
         line = line.trim()
         content += line
         if(openingRegex.test(line)){
@@ -33,6 +33,11 @@ function compactJSON (xmlFile ,spacing){
 
             if(tags.length === 1){
                 root = currentTag;
+                if(xmlFile.length === index + 1){
+                    return JSON.stringify(root,null,spacing);
+                }else{
+                    throw new Error("No wrapper tag")
+                }
             }else
             if(content === "" && tags.length !== 1){
                 if(typeof currentTag == "string"){
@@ -86,7 +91,6 @@ function compactJSON (xmlFile ,spacing){
         
     })
 
-    return JSON.stringify(root,null,spacing);
 
 }
 
@@ -158,7 +162,12 @@ function nonCompactJSON (xmlFile , spacing){
     })
 
 
-    return (JSON.stringify(tree.root , null ,spacing)) 
+    return (JSON.stringify(tree.root , function(key, value) {
+        if (key === "id" || key === "parent" || (Array.isArray(value) && value.length === 0) || value === "" || (typeof value === "object" && Object.keys(value).length ===0)) {
+          return undefined;
+        }
+        return value;
+      } ,spacing)) 
 }
 
 
