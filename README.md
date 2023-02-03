@@ -63,7 +63,7 @@ This figure describes every operation done in this app, when a user wants to per
 
 
 ### How to install and build
-For trying the project you can download the pre-build copy for windows platform from [**here**](https://drive.google.com/file/d/1m7Ncw1HG-fxiy88DPQtDH7_-VbWH8Y5o/view?usp=share_link) or clone the repo and build your own copy   
+For trying the project you can download the pre-build copy for windows platform from [**here**](https://drive.google.com/file/d/13N5hRprUJijE73viSWGtX3rJAhdT4Dnu/view?usp=share_link) or clone the repo and build your own copy   
 For building your copy make sure you have node and npm installed on your machine, then follow these instructions
 1. Clone the repo
    ``` 
@@ -85,10 +85,10 @@ For building your copy make sure you have node and npm installed on your machine
 
 
 ### Remarks
-1.  comments and attributes are not supported
+1. comments and attributes are not supported
 2. XML must have a single parent (wrapper tag) for compact json to work properly
-3.  empty XML tags are ignored
-3. #### social network XML must be formatted this way 
+3. empty XML tags are ignored
+3. social network XML must be formatted this way 
 ```XML 
 <users>
     <user>
