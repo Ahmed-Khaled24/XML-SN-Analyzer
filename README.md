@@ -6,8 +6,8 @@
 - **XML formatter** which takes an XML file and do various operations:  
 `validate`, `correct`, `compress`, `decompress`, `convert to JSON`, `minify`, and  `prettify `
 
-- **Social Network Analysis** which takes the social network data written in XML format from the previous phase and do various operations:  
-`graph visualization`, `search in posts`, `get mutual users`, `most active user`, `most influencer user`, `suggest friends`    
+- **Social Network Analyzer** which takes the social network data written in XML format from the previous phase and do various operations:  
+`graph visualization`, `search in posts`, `get mutual users`, `most active user`, `most influencer user`, and `suggest friends`    
 
 
 ### GUI Manual
